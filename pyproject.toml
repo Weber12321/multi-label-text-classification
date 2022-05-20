@@ -1,0 +1,20 @@
+[tool.poetry]
+name = "scientificproject"
+version = "0.1.0"
+description = ""
+authors = ["Weber <ychuang@eland.com.tw>"]
+
+[tool.poetry.dependencies]
+python = "^3.8"
+transformers = "^4.19.2"
+vaex = "^4.9.1"
+pandas = "^1.4.2"
+sklearn = "^0.0"
+torch = {url = "https://download.pytorch.org/whl/cpu/torch-1.11.0%2Bcpu-cp38-cp38-win_amd64.whl"}
+jupyter = "^1.0.0"
+
+[tool.poetry.dev-dependencies]
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
