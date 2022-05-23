@@ -67,10 +67,15 @@ coverage.xml
 *.ipynb
 
 # sqlite
-save.db
+*.db
+*.sqlite
+*.sql
 
 # pickle file
 *.pkl
+
+# compress file
+*.zip
 
 # all logs
 /logs
