@@ -30,6 +30,17 @@ python-versions = ">=3.6"
 frozenlist = ">=1.1.0"
 
 [[package]]
+name = "amqp"
+version = "5.1.1"
+description = "Low-level AMQP client for Python (fork of amqplib)."
+category = "main"
+optional = false
+python-versions = ">=3.6"
+
+[package.dependencies]
+vine = ">=5.0.0"
+
+[[package]]
 name = "anyio"
 version = "3.6.1"
 description = "High level compatibility layer for multiple asynchronous event loop implementations"
@@ -185,6 +196,14 @@ html5lib = ["html5lib"]
 lxml = ["lxml"]
 
 [[package]]
+name = "billiard"
+version = "3.6.4.0"
+description = "Python multiprocessing fork with improvements and bugfixes"
+category = "main"
+optional = false
+python-versions = "*"
+
+[[package]]
 name = "blake3"
 version = "0.3.1"
 description = "Python bindings for the Rust blake3 crate"
@@ -232,6 +251,57 @@ optional = false
 python-versions = "~=3.7"
 
 [[package]]
+name = "celery"
+version = "5.2.6"
+description = "Distributed Task Queue."
+category = "main"
+optional = false
+python-versions = ">=3.7,"
+
+[package.dependencies]
+billiard = ">=3.6.4.0,<4.0"
+click = ">=8.0.3,<9.0"
+click-didyoumean = ">=0.0.3"
+click-plugins = ">=1.1.1"
+click-repl = ">=0.2.0"
+kombu = ">=5.2.3,<6.0"
+pytz = ">=2021.3"
+vine = ">=5.0.0,<6.0"
+
+[package.extras]
+arangodb = ["pyArango (>=1.3.2)"]
+auth = ["cryptography"]
+azureblockblob = ["azure-storage-blob (==12.9.0)"]
+brotli = ["brotli (>=1.0.0)", "brotlipy (>=0.7.0)"]
+cassandra = ["cassandra-driver (<3.21.0)"]
+consul = ["python-consul2"]
+cosmosdbsql = ["pydocumentdb (==2.3.2)"]
+couchbase = ["couchbase (>=3.0.0)"]
+couchdb = ["pycouchdb"]
+django = ["Django (>=1.11)"]
+dynamodb = ["boto3 (>=1.9.178)"]
+elasticsearch = ["elasticsearch"]
+eventlet = ["eventlet (>=0.32.0)"]
+gevent = ["gevent (>=1.5.0)"]
+librabbitmq = ["librabbitmq (>=1.5.0)"]
+memcache = ["pylibmc"]
+mongodb = ["pymongo[srv] (>=3.11.1)"]
+msgpack = ["msgpack"]
+pymemcache = ["python-memcached"]
+pyro = ["pyro4"]
+pytest = ["pytest-celery"]
+redis = ["redis (>=3.4.1,!=4.0.0,!=4.0.1)"]
+s3 = ["boto3 (>=1.9.125)"]
+slmq = ["softlayer-messaging (>=1.0.3)"]
+solar = ["ephem"]
+sqlalchemy = ["sqlalchemy"]
+sqs = ["kombu"]
+tblib = ["tblib (>=1.3.0)", "tblib (>=1.5.0)"]
+yaml = ["PyYAML (>=3.10)"]
+zookeeper = ["kazoo (>=1.3.1)"]
+zstd = ["zstandard"]
+
+[[package]]
 name = "certifi"
 version = "2022.5.18.1"
 description = "Python package for providing Mozilla's CA Bundle."
@@ -271,6 +341,44 @@ python-versions = ">=3.7"
 
 [package.dependencies]
 colorama = {version = "*", markers = "platform_system == \"Windows\""}
+
+[[package]]
+name = "click-didyoumean"
+version = "0.3.0"
+description = "Enables git-like *did-you-mean* feature in click"
+category = "main"
+optional = false
+python-versions = ">=3.6.2,<4.0.0"
+
+[package.dependencies]
+click = ">=7"
+
+[[package]]
+name = "click-plugins"
+version = "1.1.1"
+description = "An extension module for click to enable registering CLI commands via setuptools entry-points."
+category = "main"
+optional = false
+python-versions = "*"
+
+[package.dependencies]
+click = ">=4.0"
+
+[package.extras]
+dev = ["pytest (>=3.6)", "pytest-cov", "wheel", "coveralls"]
+
+[[package]]
+name = "click-repl"
+version = "0.2.0"
+description = "REPL plugin for Click"
+category = "main"
+optional = false
+python-versions = "*"
+
+[package.dependencies]
+click = "*"
+prompt-toolkit = "*"
+six = "*"
 
 [[package]]
 name = "cloudpickle"
@@ -1002,6 +1110,34 @@ description = "A fast implementation of the Cassowary constraint solver"
 category = "main"
 optional = false
 python-versions = ">=3.7"
+
+[[package]]
+name = "kombu"
+version = "5.2.4"
+description = "Messaging library for Python."
+category = "main"
+optional = false
+python-versions = ">=3.7"
+
+[package.dependencies]
+amqp = ">=5.0.9,<6.0.0"
+vine = "*"
+
+[package.extras]
+azureservicebus = ["azure-servicebus (>=7.0.0)"]
+azurestoragequeues = ["azure-storage-queue"]
+consul = ["python-consul (>=0.6.0)"]
+librabbitmq = ["librabbitmq (>=2.0.0)"]
+mongodb = ["pymongo (>=3.3.0,<3.12.1)"]
+msgpack = ["msgpack"]
+pyro = ["pyro4"]
+qpid = ["qpid-python (>=0.26)", "qpid-tools (>=0.26)"]
+redis = ["redis (>=3.4.1,!=4.0.0,!=4.0.1)"]
+slmq = ["softlayer-messaging (>=1.0.3)"]
+sqlalchemy = ["sqlalchemy"]
+sqs = ["boto3 (>=1.9.12)", "pycurl (>=7.44.1,<7.45.0)", "urllib3 (>=1.26.7)"]
+yaml = ["PyYAML (>=3.10)"]
+zookeeper = ["kazoo (>=1.3.1)"]
 
 [[package]]
 name = "llvmlite"
@@ -1829,6 +1965,30 @@ pymysql = ["pymysql (<1)", "pymysql"]
 sqlcipher = ["sqlcipher3-binary"]
 
 [[package]]
+name = "sqlalchemy2-stubs"
+version = "0.0.2a22"
+description = "Typing Stubs for SQLAlchemy 1.4"
+category = "main"
+optional = false
+python-versions = ">=3.6"
+
+[package.dependencies]
+typing-extensions = ">=3.7.4"
+
+[[package]]
+name = "sqlmodel"
+version = "0.0.6"
+description = "SQLModel, SQL databases in Python, designed for simplicity, compatibility, and robustness."
+category = "main"
+optional = false
+python-versions = ">=3.6.1,<4.0.0"
+
+[package.dependencies]
+pydantic = ">=1.8.2,<2.0.0"
+SQLAlchemy = ">=1.4.17,<1.5.0"
+sqlalchemy2-stubs = "*"
+
+[[package]]
 name = "stack-data"
 version = "0.2.0"
 description = "Extract data from python stack frames and tracebacks for informative displays"
@@ -2255,6 +2415,14 @@ pillow = "*"
 vaex-core = ">=4.0.0,<5"
 
 [[package]]
+name = "vine"
+version = "5.0.0"
+description = "Promises, promises, promises."
+category = "main"
+optional = false
+python-versions = ">=3.6"
+
+[[package]]
 name = "watchgod"
 version = "0.8.2"
 description = "Simple, modern file watching and code reload in python."
@@ -2375,7 +2543,7 @@ testing = ["pytest (>=6)", "pytest-checkdocs (>=2.4)", "pytest-flake8", "pytest-
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.8"
-content-hash = "8db2ea8e7dc99fa137655c2fd4d8f704f96a305b188addf2cf8042f7e3b09336"
+content-hash = "67e20bd560bb6d2b8b09e6df4b94e8ac2247f51c90110384736d099da9872d6b"
 
 [metadata.files]
 aiohttp = [
@@ -2455,6 +2623,10 @@ aiohttp = [
 aiosignal = [
     {file = "aiosignal-1.2.0-py3-none-any.whl", hash = "sha256:26e62109036cd181df6e6ad646f91f0dcfd05fe16d0cb924138ff2ab75d64e3a"},
     {file = "aiosignal-1.2.0.tar.gz", hash = "sha256:78ed67db6c7b7ced4f98e495e572106d5c432a93e1ddd1bf475e1dc05f5b7df2"},
+]
+amqp = [
+    {file = "amqp-5.1.1-py3-none-any.whl", hash = "sha256:6f0956d2c23d8fa6e7691934d8c3930eadb44972cbbd1a7ae3a520f735d43359"},
+    {file = "amqp-5.1.1.tar.gz", hash = "sha256:2c1b13fecc0893e946c65cbd5f36427861cffa4ea2201d8f6fca22e2a373b5e2"},
 ]
 anyio = [
     {file = "anyio-3.6.1-py3-none-any.whl", hash = "sha256:cb29b9c70620506a9a8f87a309591713446953302d7d995344d0d7c6c0c9a7be"},
@@ -2538,6 +2710,10 @@ beautifulsoup4 = [
     {file = "beautifulsoup4-4.11.1-py3-none-any.whl", hash = "sha256:58d5c3d29f5a36ffeb94f02f0d786cd53014cf9b3b3951d42e0080d8a9498d30"},
     {file = "beautifulsoup4-4.11.1.tar.gz", hash = "sha256:ad9aa55b65ef2808eb405f46cf74df7fcb7044d5cbc26487f96eb2ef2e436693"},
 ]
+billiard = [
+    {file = "billiard-3.6.4.0-py3-none-any.whl", hash = "sha256:87103ea78fa6ab4d5c751c4909bcff74617d985de7fa8b672cf8618afd5a875b"},
+    {file = "billiard-3.6.4.0.tar.gz", hash = "sha256:299de5a8da28a783d51b197d496bef4f1595dd023a93a4f59dde1886ae905547"},
+]
 blake3 = [
     {file = "blake3-0.3.1-cp310-cp310-macosx_10_7_x86_64.whl", hash = "sha256:b6f4c2387a790ea4d4048203d06d27d249d5d702fa16ee67b55e94e03a493f15"},
     {file = "blake3-0.3.1-cp310-cp310-macosx_11_0_arm64.whl", hash = "sha256:f4726857d743769b64b008dddf48bdd004bc837c8491d4d6568e0dee47bda009"},
@@ -2575,6 +2751,10 @@ bqplot = [
 cachetools = [
     {file = "cachetools-5.1.0-py3-none-any.whl", hash = "sha256:4ebbd38701cdfd3603d1f751d851ed248ab4570929f2d8a7ce69e30c420b141c"},
     {file = "cachetools-5.1.0.tar.gz", hash = "sha256:8b3b8fa53f564762e5b221e9896798951e7f915513abf2ba072ce0f07f3f5a98"},
+]
+celery = [
+    {file = "celery-5.2.6-py3-none-any.whl", hash = "sha256:da31f8eae7607b1582e5ee2d3f2d6f58450585afd23379491e3d9229d08102d0"},
+    {file = "celery-5.2.6.tar.gz", hash = "sha256:d1398cadf30f576266b34370e28e880306ec55f7a4b6307549b0ae9c15663481"},
 ]
 certifi = [
     {file = "certifi-2022.5.18.1-py3-none-any.whl", hash = "sha256:f1d53542ee8cbedbe2118b5686372fb33c297fcd6379b050cca0ef13a597382a"},
@@ -2639,6 +2819,18 @@ charset-normalizer = [
 click = [
     {file = "click-8.1.3-py3-none-any.whl", hash = "sha256:bb4d8133cb15a609f44e8213d9b391b0809795062913b383c62be0ee95b1db48"},
     {file = "click-8.1.3.tar.gz", hash = "sha256:7682dc8afb30297001674575ea00d1814d808d6a36af415a82bd481d37ba7b8e"},
+]
+click-didyoumean = [
+    {file = "click-didyoumean-0.3.0.tar.gz", hash = "sha256:f184f0d851d96b6d29297354ed981b7dd71df7ff500d82fa6d11f0856bee8035"},
+    {file = "click_didyoumean-0.3.0-py3-none-any.whl", hash = "sha256:a0713dc7a1de3f06bc0df5a9567ad19ead2d3d5689b434768a6145bff77c0667"},
+]
+click-plugins = [
+    {file = "click-plugins-1.1.1.tar.gz", hash = "sha256:46ab999744a9d831159c3411bb0c79346d94a444df9a3a3742e9ed63645f264b"},
+    {file = "click_plugins-1.1.1-py2.py3-none-any.whl", hash = "sha256:5d262006d3222f5057fd81e1623d4443e41dcda5dc815c06b442aa3c02889fc8"},
+]
+click-repl = [
+    {file = "click-repl-0.2.0.tar.gz", hash = "sha256:cd12f68d745bf6151210790540b4cb064c7b13e571bc64b6957d98d120dacfd8"},
+    {file = "click_repl-0.2.0-py3-none-any.whl", hash = "sha256:94b3fbbc9406a236f176e0506524b2937e4b23b6f4c0c0b2a0a83f8a64e9194b"},
 ]
 cloudpickle = [
     {file = "cloudpickle-2.0.0-py3-none-any.whl", hash = "sha256:6b2df9741d06f43839a3275c4e6632f7df6487a1f181f5f46a052d3c917c3d11"},
@@ -3090,6 +3282,10 @@ kiwisolver = [
     {file = "kiwisolver-1.4.2-pp37-pypy37_pp73-manylinux_2_17_aarch64.manylinux2014_aarch64.whl", hash = "sha256:0e8afdf533b613122e4bbaf3c1e42c2a5e9e2d1dd3a0a017749a7658757cb377"},
     {file = "kiwisolver-1.4.2-pp37-pypy37_pp73-win_amd64.whl", hash = "sha256:42f6ef9b640deb6f7d438e0a371aedd8bef6ddfde30683491b2e6f568b4e884e"},
     {file = "kiwisolver-1.4.2.tar.gz", hash = "sha256:7f606d91b8a8816be476513a77fd30abe66227039bd6f8b406c348cb0247dcc9"},
+]
+kombu = [
+    {file = "kombu-5.2.4-py3-none-any.whl", hash = "sha256:8b213b24293d3417bcf0d2f5537b7f756079e3ea232a8386dcc89a59fd2361a4"},
+    {file = "kombu-5.2.4.tar.gz", hash = "sha256:37cee3ee725f94ea8bb173eaab7c1760203ea53bbebae226328600f9d2799610"},
 ]
 llvmlite = [
     {file = "llvmlite-0.34.0-cp36-cp36m-macosx_10_9_x86_64.whl", hash = "sha256:11342e5ac320c953590bdd9d0dec8c52f4b5252c4c6335ba25f1e7b9f91f9325"},
@@ -3976,6 +4172,14 @@ sqlalchemy = [
     {file = "SQLAlchemy-1.4.27-cp39-cp39-win_amd64.whl", hash = "sha256:8dbe5f639e6d035778ebf700be6d573f82a13662c3c2c3aa0f1dba303b942806"},
     {file = "SQLAlchemy-1.4.27.tar.gz", hash = "sha256:d768359daeb3a86644f3854c6659e4496a3e6bba2b4651ecc87ce7ad415b320c"},
 ]
+sqlalchemy2-stubs = [
+    {file = "sqlalchemy2-stubs-0.0.2a22.tar.gz", hash = "sha256:31288db647bbdd411ad1e22da39a10ebe211bdcfe2efef24bcebea05abc28dd4"},
+    {file = "sqlalchemy2_stubs-0.0.2a22-py3-none-any.whl", hash = "sha256:b9b907c3555d0b11bb8d738b788be478ce3871174839171d0d49aba5d0785016"},
+]
+sqlmodel = [
+    {file = "sqlmodel-0.0.6-py3-none-any.whl", hash = "sha256:c5fd8719e09da348cd32ce2a5b6a44f289d3029fa8f1c9818229b6f34f1201b4"},
+    {file = "sqlmodel-0.0.6.tar.gz", hash = "sha256:3b4f966b9671b24d85529d274e6c4dbc7753b468e35d2d6a40bd75cad1f66813"},
+]
 stack-data = [
     {file = "stack_data-0.2.0-py3-none-any.whl", hash = "sha256:999762f9c3132308789affa03e9271bbbe947bf78311851f4d485d8402ed858e"},
     {file = "stack_data-0.2.0.tar.gz", hash = "sha256:45692d41bd633a9503a5195552df22b583caf16f0b27c4e58c98d88c8b648e12"},
@@ -4176,6 +4380,10 @@ vaex-server = [
 vaex-viz = [
     {file = "vaex-viz-0.5.1.tar.gz", hash = "sha256:e181e638433a2803ad6bd55854cef10f6ca7cb6eeed7b21fdeaf29954b0b67ac"},
     {file = "vaex_viz-0.5.1-py3-none-any.whl", hash = "sha256:0c539b8729dcf2aad656da9fc6d0954d0151c1a4fc56491121a8b8a1c6712f12"},
+]
+vine = [
+    {file = "vine-5.0.0-py2.py3-none-any.whl", hash = "sha256:4c9dceab6f76ed92105027c49c823800dd33cacce13bdedc5b914e3514b7fb30"},
+    {file = "vine-5.0.0.tar.gz", hash = "sha256:7d3b1624a953da82ef63462013bbd271d3eb75751489f9807598e8f340bd637e"},
 ]
 watchgod = [
     {file = "watchgod-0.8.2-py3-none-any.whl", hash = "sha256:2f3e8137d98f493ff58af54ea00f4d1433a6afe2ed08ab331a657df468c6bfce"},

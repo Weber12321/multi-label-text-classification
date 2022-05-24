@@ -15,6 +15,10 @@ jupyter = "^1.0.0"
 loguru = "^0.6.0"
 datasets = "^2.2.2"
 loghandler = "^0.5.0"
+fastapi = "^0.78.0"
+uvicorn = {extras = ["standard"], version = "^0.17.6"}
+celery = "^5.2.6"
+sqlmodel = "^0.0.6"
 
 [tool.poetry.dev-dependencies]
 
