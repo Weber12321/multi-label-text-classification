@@ -3,7 +3,7 @@ from datetime import datetime
 
 from loguru import logger
 
-from metrics.go_emotion import compute_metrics
+from metrics.nultilabel_metrics import compute_metrics
 from preprocess.raw_data_preprocess.preprocess import build_dataset
 from settings import LogDir, LogVar, MODEL_CLASS, DEVICE
 
