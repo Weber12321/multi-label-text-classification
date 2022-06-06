@@ -180,11 +180,11 @@ Access the experimental docs of swagger user interface and start the experiment 
 
 ## Models
 
-| Name                    | args                                                         | accuracy                                                     |
-| ----------------------- | ------------------------------------------------------------ | ------------------------------------------------------------ |
-| distilbert-base-uncased | "DATASET_NAME": "go_emotion",<br/> "MODEL_NAME": "distil_bert",<br/> "N_SAMPLE": 500,<br/> "IS_TRAINER": 1,<br/> "EPOCH": 3,<br/> "BATCH_SIZE": 32,<br/> "WEIGHT_DECAY": 0.01 | 'eval_loss': 0.3100494146347046, <br />'eval_accuracy_thresh': 0.9567669034004211, <br />'eval_runtime': 2.1132, <br />'eval_samples_per_second': 44.956, <br />'eval_steps_per_second': 1.42, <br />'epoch': 3.0 |
-|                         |                                                              |                                                              |
-|                         |                                                              |                                                              |
+| Name                    | dataset     | args                                                         | accuracy                                                     |
+| ----------------------- | ----------- | ------------------------------------------------------------ | ------------------------------------------------------------ |
+| distilbert-base-uncased | go_emotions | "DATASET_NAME": "go_emotion",<br/> "MODEL_NAME": "distil_bert",<br/> "N_SAMPLE": 500,<br/> "IS_TRAINER": 1,<br/> "EPOCH": 3,<br/> "BATCH_SIZE": 32,<br/> "WEIGHT_DECAY": 0.01 | 'eval_loss': 0.3100494146347046, <br />'eval_accuracy_thresh': 0.9567669034004211, <br />'eval_runtime': 2.1132, <br />'eval_samples_per_second': 44.956, <br />'eval_steps_per_second': 1.42, <br />'epoch': 3.0 |
+|                         |             |                                                              |                                                              |
+|                         |             |                                                              |                                                              |
 
 
 
