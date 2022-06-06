@@ -68,6 +68,10 @@ MODEL_CLASS={
     "distil_bert": {
         "ckpt": "distilbert-base-uncased",
         "model": "model_class.distilbert.DistilBertForMultilabelSequenceClassification"
+    },
+    "random_forest": {
+        "ckpt": "random_forest_model",
+        "model": "model_class.random_forest.RandomForestMultilabelClassification"
     }
 }
 

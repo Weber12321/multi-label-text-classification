@@ -3,3 +3,4 @@ run_celery:
 
 run_api:
 	@eval "python api.py"
+
