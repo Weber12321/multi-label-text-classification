@@ -47,12 +47,12 @@ DEBUG=TRUE
 #Training device configuration
 DEVICE=cpu
 
-#DATABASE
-USER=rd2
-PASSWORD=eland4321
-HOST=172.18.20.190
-PORT=3306
-SCHEMA=audience_dl
+#DATABASE: using mysql
+USER=<user>
+PASSWORD=<password>
+HOST=<host>
+PORT=<port>
+SCHEMA=<schema>
 ```
 
 Run the service
