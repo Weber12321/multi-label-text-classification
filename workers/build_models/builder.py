@@ -39,6 +39,8 @@ class BertModelWorker:
         self.weight_decay = weight_decay
 
     def create_model_class(self):
+        """create new model modules and set its path in settings.py"""
+
         if self.model_name in MODEL_CLASS:
             module_path, class_name = MODEL_CLASS[self.model_name]['model'].rsplit(sep='.', maxsplit=1)
             model_ckpt = MODEL_CLASS[self.model_name]['ckpt']
@@ -78,6 +80,7 @@ class BertModelWorker:
             pass
 
     def data_preprocess(self, model_ckpt):
+        """add new data preprocess flow in build_dataset"""
         return build_dataset(self.dataset_name, model_ckpt, self.n_sample)
 
 

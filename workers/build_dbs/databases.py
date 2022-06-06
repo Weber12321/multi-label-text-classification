@@ -13,7 +13,7 @@ class TrainingTask(SQLModel, table=True):
     status: TrainingStatus = Field(sa_column=Column(Enum(TrainingStatus)))
     create_time: datetime
     total_time: Optional[float]
-    training_args: str
+    training_args: Optional[str]
     training_result: Optional[str]
     evaluate_result: Optional[str]
     error_message: Optional[str]

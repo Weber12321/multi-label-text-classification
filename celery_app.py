@@ -35,7 +35,8 @@ logger.add(
 
 
 @celery_worker.task(name=f'{configuration.CELERY_NAME}.trainer_training', ignore_result=True)
-def trainer_training(dataset_name, model_name, n_sample, is_trainer,
+# def trainer_training(task_id, trainer):
+def trainer_training(task_id, dataset_name, model_name, n_sample, is_trainer,
                      epoch, batch_size, weight_decay):
     logger.info('init model worker ...')
     model_worker = BertModelWorker(
@@ -43,27 +44,27 @@ def trainer_training(dataset_name, model_name, n_sample, is_trainer,
         n_sample, is_trainer, epoch,
         batch_size, weight_decay)
     trainer, args = model_worker.initialize_model()
-
-    logger.info('init database ...')
+    #
+    # logger.info('init database ...')
     engine = create_engine(DATABASE_URL)
-    SQLModel.metadata.create_all(engine)
-
-    logger.info('creating the training task ...')
+    # SQLModel.metadata.create_all(engine)
+    #
+    # logger.info('creating the training task ...')
     start_time = datetime.now()
-    task = TrainingTask(
-        dataset_name=dataset_name,
-        model_name=model_name,
-        status=TrainingStatus.training,
-        create_time=start_time,
-        training_args=f"{args}"
-    )
+    # task = TrainingTask(
+    #     dataset_name=dataset_name,
+    #     model_name=model_name,
+    #     status=TrainingStatus.training,
+    #     create_time=start_time,
+    #     training_args=f"{args}"
+    # )
+    #
+    # with Session(engine) as session:
+    #     session.add(task)
+    #     session.commit()
+    #     session.refresh(task)
 
-    with Session(engine) as session:
-        session.add(task)
-        session.commit()
-        session.refresh(task)
-
-    task_id = task.id
+    # task_id = task.id
 
     try:
         logger.info(f"start training task_{task_id} ...")
@@ -80,6 +81,7 @@ def trainer_training(dataset_name, model_name, n_sample, is_trainer,
 
             _task.training_result = f"{train_result}"
             _task.evaluate_result = f"{eval_result}"
+            _task.training_args = f"{args}"
             _task.status = TrainingStatus.finished
             _task.total_time = (end_time - start_time).total_seconds() / 60
 
@@ -106,5 +108,3 @@ def trainer_training(dataset_name, model_name, n_sample, is_trainer,
             session.commit()
             session.refresh(_task)
             logger.error(f"updated task_{task_id}")
-
-
