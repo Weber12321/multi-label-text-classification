@@ -8,7 +8,8 @@ from fastapi.responses import JSONResponse
 from loguru import logger
 from sqlmodel import create_engine, Session, select
 
-from settings import APIConfig, LogDir, LogVar, PostTaskData
+from celery_app import trainer_training
+from settings import APIConfig, LogDir, LogVar, PostTaskData, DATABASE_URL
 from utils.database_helper import orm_cls_to_dict
 from utils.log_helper import get_log_name
 from workers.build_dbs.databases import TrainingTask
@@ -43,7 +44,7 @@ def request_validation_exception_handler(request: Request, exc: RequestValidatio
 
 app.add_exception_handler(RequestValidationError, request_validation_exception_handler)
 
-engine = create_engine("sqlite:///data/training.db")
+engine = create_engine(DATABASE_URL)
 
 
 @app.get('/')
@@ -65,7 +66,27 @@ def render_tasks():
 
 @app.post('/')
 def post_task(body: PostTaskData):
-    pass
+    try:
+        trainer_training.apply_async(
+            args=(
+                body.DATASET_NAME,
+                body.MODEL_NAME,
+                body.N_SAMPLE,
+                body.IS_TRAINER,
+                body.EPOCH,
+                body.BATCH_SIZE,
+                body.WEIGHT_DECAY
+            ),
+            queue='queue1'
+        )
+        logger.debug('task started ...')
+        return JSONResponse(status_code=status.HTTP_200_OK, content='OK')
+
+    except Exception as e:
+        err_msg = f"failed to post training task since {type(e).__class__}:{e}"
+        logger.error(err_msg)
+        return JSONResponse(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+                            content=jsonable_encoder(err_msg))
 
 
 @app.get('/{id}')
@@ -85,3 +106,5 @@ def get_task(id: int):
         )
 
 
+if __name__ == '__main__':
+    uvicorn.run("__main__:app", host=configuration.API_HOST, debug=True)

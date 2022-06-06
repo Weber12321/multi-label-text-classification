@@ -2,9 +2,9 @@ from datetime import datetime
 from datasets import load_dataset
 from loguru import logger
 
-from datasets.go_emotion import GoEmotionDataset
+from datasets_class.go_emotion import GoEmotionDataset
 from settings import LogDir, LogVar
-from tokenizers.tokenize import build_tokenizer
+from tokenizers_class.tokenize import build_tokenizer
 from utils.enum_helper import DatasetName
 from utils.log_helper import get_log_name
 from utils.preprocess_helper import custom_train_test_split, get_data_sample

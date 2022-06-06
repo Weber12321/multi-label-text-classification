@@ -17,18 +17,31 @@ This is a project for text multi-label text classification implementation.
 
 ### Requirements
 
++ [Celery](https://docs.celeryq.dev/en/stable/index.html)
++ [FastAPI](https://fastapi.tiangolo.com/)
+
 + [Python 3.8.10](https://www.python.org/downloads/release/python-3810/)
 + [Poetry 1.1.13](https://python-poetry.org/docs/)
++ 
++ 
 
 ### Usage
 
 Download and setup the environment:
 
 ```shell
-$ git clone https://github.com/ychuang789/Multi-Label-text-classification.git
+$ git clone https://gitting.eland.com.tw/rd2/models/multi-label-classification.git
+
+$ cd 
 
 $ poetry install
 ```
+
+
+
+## Workflow
+
+
 
 
 
@@ -59,3 +72,4 @@ $ poetry install
 
 
 ## Appendix
+

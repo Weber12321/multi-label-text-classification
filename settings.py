@@ -1,7 +1,6 @@
 import os
 
 import torch
-from debugpy._vendored.pydevd.pydevd_attach_to_process.winappdbg.win32.dbghelp import API_VERSION
 from dotenv import load_dotenv
 from pydantic import BaseSettings, BaseModel
 
@@ -37,6 +36,7 @@ class LogVar:
 class CeleryConfig(BaseSettings):
     CELERY_NAME: str = 'celery_app'
     CELERY_BROKER: str = 'redis://localhost'
+    CELERY_BACKEND: str = 'db+sqlite:///save.db'
     CELERY_TIMEZONE: str = 'Asia/Taipei'
     CELERY_ENABLE_UTC: bool = False
     CELERY_TASK_TRACK_STARTED: bool = True
@@ -70,3 +70,11 @@ MODEL_CLASS={
         "model": "model_class.distilbert.DistilBertForMultilabelSequenceClassification"
     }
 }
+
+# databases
+if DEBUG:
+    DATABASE_URL = "sqlite:///training.db"
+else:
+    DATABASE_URL = f'mysql+pymysql://{os.getenv("USER")}:' \
+                   f'{os.getenv("PASSWORD")}@{os.getenv("HOST")}:' \
+                   f'{os.getenv("PORT")}/{os.getenv("SCHEMA")}?charset=utf8mb4'

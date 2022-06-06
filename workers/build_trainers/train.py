@@ -1,5 +1,9 @@
+from datetime import datetime
 from loguru import logger
 from transformers import TrainingArguments, Trainer
+
+from settings import LogDir, LogVar
+from utils.log_helper import get_log_name
 
 logger.add(
     get_log_name(LogDir.model, datetime.now()),
