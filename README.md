@@ -153,7 +153,7 @@ Access the experimental docs of swagger user interface and start the experiment 
 
 ## Workflow
 
-![](graphs/Audience DL-experimental workflow.drawio.png)
+![](graphs/workflow.png)
 
 + The model worker will select the data preprocessing and model class by the input arguments.
 + You can add new model class and data preprocess flow in this project.
