@@ -63,8 +63,8 @@ class BertModelWorker(ModelWorker):
             )
             return trainer, args
         else:
-            # todo: add other training flow
-            pass
+            # todo: add other training method without trainer, e.g. pytorch
+            raise ValueError('trainer cannot be set to none now')
 
     def data_preprocess(self, model_ckpt):
         """add new data preprocess flow in build_dataset"""
@@ -76,6 +76,10 @@ class MLModelWorker(ModelWorker):
         super().__init__(dataset_name, model_name, n_sample)
 
     def initialize_model(self):
+        logger.debug('building model ...')
+        model_class, _, model_ckpt = self.create_model_class()
+        logger.info('preprocess the data ...')
+        req_dict = self.data_preprocess(model_ckpt)
         pass
 
     def data_preprocess(self, model_ckpt):

@@ -190,3 +190,49 @@ Access the experimental docs of swagger user interface and start the experiment 
 
 ## Appendix
 
+### Experiment
+
+###### Dataset
+
++ go_emotions
+
+| Name          | Description                                                  | length |
+| ------------- | ------------------------------------------------------------ | ------ |
+| go_emotions   | raw dataset without any preprocess, only remove the duplicated row based on text | 57732  |
+| go_emotions_s | small dataset with size 1000 rows sampling                   | 1000   |
+| *             | only extract top 8 occurrence of label classes (original size of label classes is 28) | -      |
+
+
+
+###### Baseline
+
++ metrics: accuracy and f1_score
+
+| Name      | dataset     | method                   | accuracy                                                     |
+| --------- | ----------- | ------------------------ | ------------------------------------------------------------ |
+| RF        | go_emotions |                          | acc: 95.7194 <br />micro avg 17.667207 <br />macro avg 10.599551 <br />weighted avg 14.287957 |
+| kNN       | go_emotions |                          | acc: 95.7184 <br />micro avg 16.128085 <br />macro avg 9.279948 <br />weighted avg 13.678768 |
+| RF        | go_emotions | sklearn multi output     | acc: 95.7370 <br />micro avg 17.362550 <br />macro avg 10.471720 <br />weighted avg 13.940626 |
+| LinearSVC | go_emotions | sklearn multi output     | acc: 95.9625 <br />micro avg 14.273205 <br />macro avg 8.714187 <br />weighted avg 10.206662 |
+| LR        | go_emotions | sklearn multi output     | acc: 95.9509 <br />micro avg 14.033272 <br />macro avg 9.029469 <br />weighted avg 10.311118 |
+| RF        | go_emotions | sklearn classifier chain | acc: 94.6698<br/>micro avg 32.595297<br/>macro avg 13.468366<br/>weighted avg 23.166349 |
+| LinearSVC | go_emotions | sklearn classifier chain | acc: 94.7122<br/>micro avg 32.461811<br/>macro avg 10.715990<br/>weighted avg 20.726128 |
+| LR        | go_emotions | sklearn classifier chain | acc: 94.73414<br/>micro avg 32.733890<br/>macro avg 11.458806<br/>weighted avg 21.258039 |
+
+
+
+###### BERT
+
++ metrics: precision, recall and f1_score
+
+| Name      | dataset        | params                                               | best_accuracy                                                |
+| --------- | -------------- | ---------------------------------------------------- | ------------------------------------------------------------ |
+| bert-base | go_emotions_s* | epoch: 10<br/>batch_size: 32<br/>learning_rate: 5e-5 | training acc {'precision': 86.39340162318044, 'recall': 62.52927400468384, 'f1': 68.35319614875736}<br/><br/>validation acc {'precision': 63.61616021620872, 'recall': 40.09216589861751, 'f1': 47.05389188894794} |
+| bert-base | go_emotions*   | epoch: 10<br/>batch_size: 32<br/>learning_rate: 5e-5 |                                                              |
+| XLNet     | go_emotions_s* |                                                      |                                                              |
+| XLNet     | go_emotions*   |                                                      |                                                              |
+| roBERTa   | go_emotions_s* |                                                      |                                                              |
+| roBERTa   | go_emotions*   |                                                      |                                                              |
+| albert    | go_emotions_s* |                                                      |                                                              |
+| albert    |                |                                                      |                                                              |
+
