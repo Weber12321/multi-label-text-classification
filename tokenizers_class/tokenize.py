@@ -1,19 +1,40 @@
-import pandas as pd
 from loguru import logger
-from transformers import AutoTokenizer
+
+from settings import MODEL_CLASS
 
 
-def build_tokenizer(
-        token_name: str, df_train: pd.DataFrame, df_test: pd.DataFrame,
-        context_col: str, label_col: str, log: logger):
+def build_tokenizer(token_name: str, log: logger):
+    """
+    :param token_name: tokenizer name which corresponds in MODEL_CLASS, settings.py
+    :param log: logger class
+    :return: tokenizer
+    """
     log.debug(f"loading {token_name} ...")
-    tokenizer = AutoTokenizer.from_pretrained(token_name)
-    log.debug('tokenizing dataset')
-    train_encodings = tokenizer(df_train[context_col].values.tolist(), truncation=True)
-    test_encodings = tokenizer(df_test[context_col].values.tolist(), truncation=True)
-    train_labels = df_train[label_col].values.tolist()
-    test_labels = df_test[label_col].values.tolist()
 
-    return train_encodings, test_encodings, train_labels, test_labels, tokenizer
+    ckpt = MODEL_CLASS.get(token_name)
+
+    if ckpt == 'bert-base-uncased':
+        from transformers import BertTokenizer
+        tokenizer = BertTokenizer.from_pretrained(
+            'bert-base-uncased', do_lower_case=True
+        )
+    elif ckpt == 'xlnet-base-cased':
+        from transformers import XLNetTokenizer
+        tokenizer = XLNetTokenizer.from_pretrained(ckpt, do_lower_case=False)
+    elif ckpt == 'roberta-base':
+        from transformers import RobertaTokenizer
+        tokenizer = RobertaTokenizer.from_pretrained(ckpt, do_lower_case=False)
+    elif ckpt == 'albert-base-v2':
+        from transformers import AlbertTokenizer
+        tokenizer = AlbertTokenizer.from_pretrained(ckpt)
+    elif ckpt == 'xlm-roberta-base':
+        from transformers import XLMRobertaTokenizer
+        tokenizer = XLMRobertaTokenizer.from_pretrained(ckpt)
+    else:
+        error_message = f"token_name {token_name} is not fount"
+        log.error(error_message)
+        raise ValueError(error_message)
+
+    return tokenizer
 
 

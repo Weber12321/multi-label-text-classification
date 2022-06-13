@@ -3,7 +3,6 @@ from transformers import DistilBertForSequenceClassification
 from transformers.modeling_outputs import SequenceClassifierOutput
 
 
-
 class DistilBertForMultilabelSequenceClassification(DistilBertForSequenceClassification):
     def __init__(self, config):
         super().__init__(config)

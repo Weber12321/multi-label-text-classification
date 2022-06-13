@@ -8,13 +8,13 @@ from fastapi.responses import JSONResponse
 from loguru import logger
 from sqlmodel import create_engine, Session, select, SQLModel
 
-from celery_app import trainer_training
+from celery_app import background_training
 from settings import APIConfig, LogDir, LogVar, PostTaskData, DATABASE_URL
 from utils.database_helper import orm_cls_to_dict
 from utils.enum_helper import TrainingStatus
 from utils.log_helper import get_log_name
-from workers.build_dbs.databases import TrainingTask
-from workers.build_models.builder import BertModelWorker
+from workers.dbs_builder.databases import TrainingTask
+from workers.models_builder.builder import BertModelWorker
 
 configuration = APIConfig()
 
@@ -105,7 +105,7 @@ def post_task(body: PostTaskData):
         #     queue='queue1'
         # )
 
-        trainer_training.apply_async(
+        background_training.apply_async(
             args=(
                 task_id,
                 body.DATASET_NAME,

@@ -2,13 +2,14 @@ from datetime import datetime
 
 from celery import Celery
 from loguru import logger
-from sqlmodel import create_engine, SQLModel, Session, select
+from sqlmodel import create_engine, Session, select
 
+from run import run_training_flow
 from settings import CeleryConfig, DATABASE_URL, LogDir, LogVar
 from utils.enum_helper import TrainingStatus
 from utils.log_helper import get_log_name
-from workers.build_dbs.databases import TrainingTask
-from workers.build_models.builder import BertModelWorker
+from workers.dbs_builder.databases import TrainingTask
+from workers.models_builder.builder import BertModelWorker
 
 configuration = CeleryConfig()
 
@@ -36,40 +37,38 @@ logger.add(
 
 @celery_worker.task(name=f'{configuration.CELERY_NAME}.trainer_training', ignore_result=True)
 # def trainer_training(task_id, trainer):
-def trainer_training(task_id, dataset_name, model_name, n_sample, is_trainer,
-                     epoch, batch_size, weight_decay):
-    logger.info('init model worker ...')
-    model_worker = BertModelWorker(
-        dataset_name, model_name,
-        n_sample, is_trainer, epoch,
-        batch_size, weight_decay)
-    trainer, args = model_worker.initialize_model()
-    #
-    # logger.info('init database ...')
-    engine = create_engine(DATABASE_URL)
-    # SQLModel.metadata.create_all(engine)
-    #
-    # logger.info('creating the training task ...')
-    start_time = datetime.now()
-    # task = TrainingTask(
-    #     dataset_name=dataset_name,
-    #     model_name=model_name,
-    #     status=TrainingStatus.training,
-    #     create_time=start_time,
-    #     training_args=f"{args}"
-    # )
-    #
-    # with Session(engine) as session:
-    #     session.add(task)
-    #     session.commit()
-    #     session.refresh(task)
+def background_training(task_id, dataset_name, model_name, n_sample,
+                        epoch, max_len, batch_size, split_rate, lr_rate):
 
-    # task_id = task.id
+    engine = create_engine(DATABASE_URL)
+    start_time = datetime.now()
 
     try:
+        logger.info('init model worker ...')
+        worker = BertModelWorker(
+            dataset_name=dataset_name,
+            model_name=model_name,
+            n_sample=n_sample,
+            learning_rate= lr_rate,
+            epoch=epoch,
+            max_len=max_len,
+            batch_size=batch_size,
+            train_val_split_rate=split_rate
+        )
+
+        args = {
+            'dataset_name': dataset_name,
+            'model_name': model_name,
+            'n_sample': n_sample,
+            'lr_rate': lr_rate,
+            'epoch': epoch,
+            'max_len': max_len,
+            'batch_size': batch_size,
+            'train_val_split_rate': split_rate
+        }
+
         logger.info(f"start training task_{task_id} ...")
-        train_result = trainer.train()
-        eval_result = trainer.evaluate()
+        training_result = run_training_flow(worker, task_id=task_id)
         end_time = datetime.now()
 
         logger.info(f"writing result of training task_{task_id} ...")
@@ -78,9 +77,7 @@ def trainer_training(task_id, dataset_name, model_name, n_sample, is_trainer,
             results = session.exec(statement)
             _task = results.one()
             logger.debug(f"{_task}")
-
-            _task.training_result = f"{train_result}"
-            _task.evaluate_result = f"{eval_result}"
+            _task.result = f"{training_result}"
             _task.training_args = f"{args}"
             _task.status = TrainingStatus.finished
             _task.total_time = (end_time - start_time).total_seconds() / 60

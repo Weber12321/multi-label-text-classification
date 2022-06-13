@@ -223,16 +223,16 @@ Access the experimental docs of swagger user interface and start the experiment 
 
 ###### BERT
 
-+ metrics: precision, recall and f1_score
++ metrics: precision, recall and f1_score ("weighted")
 
 | Name      | dataset        | params                                               | best_accuracy                                                |
 | --------- | -------------- | ---------------------------------------------------- | ------------------------------------------------------------ |
 | bert-base | go_emotions_s* | epoch: 10<br/>batch_size: 32<br/>learning_rate: 5e-5 | training acc {'precision': 86.39340162318044, 'recall': 62.52927400468384, 'f1': 68.35319614875736}<br/><br/>validation acc {'precision': 63.61616021620872, 'recall': 40.09216589861751, 'f1': 47.05389188894794} |
-| bert-base | go_emotions*   | epoch: 10<br/>batch_size: 32<br/>learning_rate: 5e-5 |                                                              |
+| bert-base | go_emotions*   | epoch: 10<br/>batch_size: 32<br/>learning_rate: 2e-5 | training acc {'precision': 39.40596096028193, 'recall': 36.651328551450355, 'f1': 37.50781298254313}<br /><br />validation acc {'precision': 38.21967528121705, 'recall': 37.83808150018031, 'f1': 37.54336755696961} |
 | XLNet     | go_emotions_s* |                                                      |                                                              |
-| XLNet     | go_emotions*   |                                                      |                                                              |
+| XLNet     | go_emotions*   | epoch: 10<br/>batch_size: 32<br/>learning_rate: 2e-5 | training acc {'precision': 76.85732008788638, 'recall': 64.99875866115964, 'f1': 69.97375070585639} <br />validation acc {'precision': 57.67942807383343, 'recall': 48.61048655454627, 'f1': 51.77189487135191} |
 | roBERTa   | go_emotions_s* |                                                      |                                                              |
-| roBERTa   | go_emotions*   |                                                      |                                                              |
+| roBERTa   | go_emotions*   | epoch: 10<br/>batch_size: 32<br/>learning_rate: 2e-5 | training acc {'precision': 74.77325531996433, 'recall': 60.615704064820456, 'f1': 66.24626030848755}<br/>validation acc {'precision': 58.86018961681455, 'recall': 50.12141379620469, 'f1': 53.595712428351064} |
 | albert    | go_emotions_s* |                                                      |                                                              |
-| albert    |                |                                                      |                                                              |
+| albert    | go_emotions*   |                                                      |                                                              |
 

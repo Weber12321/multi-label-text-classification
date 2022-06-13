@@ -17,6 +17,7 @@ DEVICE = torch.device(os.getenv('DEVICE'))
 class LogDir:
     preprocess = 'preprocess'
     model = 'model'
+    training = 'training'
     api = 'api'
 
 
@@ -63,16 +64,23 @@ class PostTaskData(BaseModel):
         use_enum_values = True
 
 
+# dataset class
+# small is less classes version of dataset
+DATA_CLASS = {
+    "go_emotion": "datasets_class.go_emotion.GoEmotionDataset",
+}
+
 # models
 MODEL_CLASS={
-    "distil_bert": {
-        "ckpt": "distilbert-base-uncased",
-        "model": "model_class.distilbert.DistilBertForMultilabelSequenceClassification"
-    },
-    "random_forest": {
-        "ckpt": "random_forest_model",
-        "model": "model_class.random_forest.RandomForestMultilabelClassification"
-    }
+    # "distil_bert": {
+    #     "ckpt": "distilbert-base-uncased",
+    #     "model": "model_class.distilbert.DistilBertForMultilabelSequenceClassification"
+    # },
+    "bert_base": "bert-base-uncased",
+    "XLNet": "xlnet-base-cased",
+    "roberta": "roberta-base",
+    "albert": "albert-base-v2",
+    "XLM_roberta": "xlm-roberta-base"
 }
 
 # databases

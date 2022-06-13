@@ -14,8 +14,7 @@ class TrainingTask(SQLModel, table=True):
     create_time: datetime
     total_time: Optional[float]
     training_args: Optional[str]
-    training_result: Optional[str]
-    evaluate_result: Optional[str]
+    result: Optional[str]
     error_message: Optional[str]
 
 
