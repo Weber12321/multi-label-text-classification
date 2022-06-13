@@ -8,12 +8,12 @@ class TrainingStatus(str, Enum):
 
 
 class ModelName(str, Enum):
-    distil_bert = 'distil_bert'
+    bert_base = "bert_base"
+    XLNet = "XLNet"
+    roberta = "roberta"
+    albert = "albert"
+    XLM_roberta = "XLM_roberta"
 
 
 class DatasetName(str, Enum):
     go_emotion = "go_emotion"
-
-
-
-

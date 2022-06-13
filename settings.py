@@ -52,17 +52,14 @@ class APIConfig(BaseSettings):
 
 
 class PostTaskData(BaseModel):
-    DATASET_NAME: DatasetName = DatasetName.go_emotion
-    MODEL_NAME: ModelName = ModelName.distil_bert
+    # DATASET_NAME: DatasetName = DatasetName.go_emotion
+    # MODEL_NAME: ModelName = ModelName.distil_bert
     N_SAMPLE: int = 500
-    IS_TRAINER: int = 1
-    EPOCH: int = 3
+    EPOCH: int = 10
+    MAX_LEN: int = 50
     BATCH_SIZE: int = 32
-    WEIGHT_DECAY: float = 0.01
-
-    class config:
-        use_enum_values = True
-
+    LEARNING_RATE: float = 2e-5
+    SPLIT_RATE: float = 0.8
 
 # dataset class
 # small is less classes version of dataset

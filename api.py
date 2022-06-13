@@ -11,10 +11,9 @@ from sqlmodel import create_engine, Session, select, SQLModel
 from celery_app import background_training
 from settings import APIConfig, LogDir, LogVar, PostTaskData, DATABASE_URL
 from utils.database_helper import orm_cls_to_dict
-from utils.enum_helper import TrainingStatus
+from utils.enum_helper import TrainingStatus, DatasetName, ModelName
 from utils.log_helper import get_log_name
 from workers.dbs_builder.databases import TrainingTask
-from workers.models_builder.builder import BertModelWorker
 
 configuration = APIConfig()
 
@@ -68,24 +67,16 @@ def render_tasks():
 
 
 @app.post('/')
-def post_task(body: PostTaskData):
+def post_task(
+        body: PostTaskData,
+        dataset_name: DatasetName,
+        model_name: ModelName):
     try:
-        # logger.info('init model worker ...')
-        # model_worker = BertModelWorker(
-        #     body.DATASET_NAME, body.MODEL_NAME,
-        #     body.N_SAMPLE, body.IS_TRAINER, body.EPOCH,
-        #     body.BATCH_SIZE, body.WEIGHT_DECAY)
-        # trainer, args = model_worker.initialize_model()
-
-        # logger.info('init database ...')
-        # engine = create_engine(DATABASE_URL)
-        # SQLModel.metadata.create_all(engine)
-
         logger.info('creating the training task ...')
         start_time = datetime.now()
         task = TrainingTask(
-            dataset_name=body.DATASET_NAME,
-            model_name=body.MODEL_NAME,
+            dataset_name=dataset_name,
+            model_name=model_name,
             status=TrainingStatus.training,
             create_time=start_time,
             training_args=""
@@ -98,23 +89,17 @@ def post_task(body: PostTaskData):
 
         task_id = task.id
 
-        # trainer_training.apply_async(
-        #     args=(
-        #         task_id,
-        #     ),
-        #     queue='queue1'
-        # )
-
         background_training.apply_async(
             args=(
                 task_id,
-                body.DATASET_NAME,
-                body.MODEL_NAME,
+                dataset_name,
+                model_name,
                 body.N_SAMPLE,
-                body.IS_TRAINER,
                 body.EPOCH,
+                body.MAX_LEN,
                 body.BATCH_SIZE,
-                body.WEIGHT_DECAY
+                body.SPLIT_RATE,
+                body.LEARNING_RATE
             ),
             queue='queue1'
         )
@@ -128,11 +113,11 @@ def post_task(body: PostTaskData):
                             content=jsonable_encoder(err_msg))
 
 
-@app.get('/{id}')
-def get_task(id: int):
+@app.get('/{_id}')
+def get_task(_id: int):
     try:
         with Session(engine) as session:
-            statement = select(TrainingTask).where(TrainingTask.id == id)
+            statement = select(TrainingTask).where(TrainingTask.id == _id)
             result = session.exec(statement).one()
         output = orm_cls_to_dict(result)
         logger.info(f"{status.HTTP_200_OK}: {output}")
