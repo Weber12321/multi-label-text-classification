@@ -204,6 +204,33 @@ Access the experimental docs of swagger user interface and start the experiment 
 
 ## Appendix
 
+### How to add a dataset?
+
+By default, we use [datasets](https://github.com/huggingface/datasets) package to load dataset from [huggingface datasets](https://huggingface.co/datasets), while you can manually add datasets with preprocessing from your own by adding:
+
+```python
+# utils/eum_helper.py 
+...
+class DatasetName(str, Enum):
+    go_emotion = "go_emotion"
+    """add your dataset name here"""
+```
+
+ ```python
+ # preprocessing/raw_data_preprocess/preprocess.py
+ def build_dataset(...):
+     if dataset_name == DatasetName.go_emotion.value:
+         ...
+     elif dataset_name == <what you have added in the last step>:
+         """your preprocessing here, make sure returns the dataloader class"""
+     ...
+     
+ ```
+
+### How to add a model?
+
+We use the [transformers](https://huggingface.co/docs/transformers/index) models and classification tools, you can add the tokenizer and classification by modify `build_tokenizer` in the module `tokenizers_class.tokenize` and `BertModelWorker.create_model_class` in the module`wokers.models_builder.builder`.
+
 ### Experiment
 
 ###### Dataset
