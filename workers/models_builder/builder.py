@@ -39,7 +39,6 @@ class BertModelWorker(ModelWorker):
         self.train_loader, self.test_loader, self.n_labels = self.data_preprocess()
         self.model = self.initialize_model()
 
-
     def initialize_model(self):
         logger.debug('building model ...')
         if self.n_labels:

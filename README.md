@@ -191,6 +191,7 @@ Access the experimental docs of swagger user interface and start the experiment 
   + 預期依據資料筆數分別標註 1k / 50k 兩份資料集
   + 使用<u>規則模型</u>先行自動收集相關結果
   + 再使用<u>doccano</u>平台進行標註驗證
+  + 詳情參考 <u>Appendix: Chinese data annotation</u> 流程
 
 
 
@@ -208,6 +209,14 @@ Access the experimental docs of swagger user interface and start the experiment 
 
 
 ## Appendix
+
+### Chinese data annotation
+
++ Auto-labeling flow
+
+![](graphs/auto-labeling.png)
+
++  upload result dataset to [rd2demo doccano](https://rd2demo.eland.com.tw/) platform to manually validate the dataset
 
 ### How to add a dataset?
 
