@@ -78,7 +78,8 @@ MODEL_CLASS={
     "XLNet": "xlnet-base-cased",
     "roberta": "roberta-base",
     "albert": "albert-base-v2",
-    "XLM_roberta": "xlm-roberta-base"
+    "XLM_roberta": "xlm-roberta-base",
+    "rule_model": "rule_model"
 }
 
 # databases

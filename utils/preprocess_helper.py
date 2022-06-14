@@ -31,3 +31,8 @@ def read_rule_json(filename):
         rules = json.load(f)
     return rules
 
+
+# todo: create a db data extracting function
+def read_dataset_from_db():
+    pass
+

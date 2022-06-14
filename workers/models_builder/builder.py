@@ -85,7 +85,7 @@ class BertModelWorker(ModelWorker):
 
         return model
 
-    def data_preprocess(self, **kwargs):
+    def data_preprocess(self):
         return build_dataset(
             dataset_name=self.dataset_name,
             token_name=self.model_name,

@@ -28,6 +28,6 @@ class ModelWorker(ABC):
         pass
 
     @abstractmethod
-    def data_preprocess(self, model_ckpt):
+    def data_preprocess(self):
         """add new data preprocess flow in build_dataset"""
         pass
