@@ -73,12 +73,12 @@ Access the experimental docs of swagger user interface and start the experiment 
   + execute the training task
   + in the response body, it will return the **task_id**
 
-![](C:\Users\ychuang\PycharmProjects\scientificProject\graphs\openapi_1.PNG)
+![](graphs/openapi_1.PNG)
 
 + get task
   + 
 
-![](C:\Users\ychuang\PycharmProjects\scientificProject\graphs\openapi_2.PNG)
+![](graphs/openapi_2.PNG)
 
 ### API
 
