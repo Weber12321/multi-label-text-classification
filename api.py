@@ -29,6 +29,25 @@ logger.add(
     colorize=LogVar.color
 )
 
+description = """
+This is a quick multi-label multi-class training flow build with fastapi and celery 
+which utilizes the [huggingface transformers](https://huggingface.co/docs/transformers/index) 
+tool. The current dataset of this project is [go_emotions](https://huggingface.co/datasets/go_emotions) 
+with models for sequence classification:  
+
++ aLBERT
++ BERT
++ roBERTa
++ XLNet
++ XLM-roBERTa
+
+Users can post a task to execute a training flow by assigning the target dataset and model 
+with adjusting the training parameters, and check the results of the training status. 
+Noted that the training information is store in the log files in /logs directory and also 
+save in a default sqlite database in debug mode, you can specify the database configuration 
+in the `.env` and `settings.py` to switch the database.  
+"""
+
 app = FastAPI(
     title=configuration.API_TITLE,
     version=configuration.API_VERSION
