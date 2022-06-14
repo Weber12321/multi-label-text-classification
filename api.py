@@ -50,7 +50,8 @@ in the `.env` and `settings.py` to switch the database.
 
 app = FastAPI(
     title=configuration.API_TITLE,
-    version=configuration.API_VERSION
+    version=configuration.API_VERSION,
+    description=description
 )
 
 
@@ -68,24 +69,24 @@ engine = create_engine(DATABASE_URL)
 SQLModel.metadata.create_all(engine)
 
 
-@app.get('/')
-def render_tasks():
-    try:
-        with Session(engine) as session:
-            statement = select(TrainingTask)
-            results = session.exec(statement)
-            outputs = [orm_cls_to_dict(r) for r in results]
-            logger.info(f"{status.HTTP_200_OK}: {outputs}")
-            return JSONResponse(status_code=status.HTTP_200_OK, content=jsonable_encoder(outputs))
+# @app.get('/', )
+# def render_tasks():
+#     try:
+#         with Session(engine) as session:
+#             statement = select(TrainingTask)
+#             results = session.exec(statement)
+#             outputs = [orm_cls_to_dict(r) for r in results]
+#             logger.info(f"{status.HTTP_200_OK}: {outputs}")
+#             return JSONResponse(status_code=status.HTTP_200_OK, content=jsonable_encoder(outputs))
+#
+#     except Exception as e:
+#         logger.error(f"{status.HTTP_500_INTERNAL_SERVER_ERROR}: {e}")
+#         return JSONResponse(
+#             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, content=jsonable_encoder(f"{e}")
+#         )
 
-    except Exception as e:
-        logger.error(f"{status.HTTP_500_INTERNAL_SERVER_ERROR}: {e}")
-        return JSONResponse(
-            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, content=jsonable_encoder(f"{e}")
-        )
 
-
-@app.post('/')
+@app.post('/', description="select a dataset and model first, and then adjust the params.")
 def post_task(
         body: PostTaskData,
         dataset_name: DatasetName,
@@ -133,7 +134,11 @@ def post_task(
                             content=jsonable_encoder(err_msg))
 
 
-@app.get('/{_id}')
+@app.get('/{_id}', description="""
+return a task info by inputting a task_id, if the `status` shows `training` then the task 
+is still running, you can check the result if `status` becomes `finished`, or check the 
+`error_message` if the task is `failed`. 
+""")
 def get_task(_id: int):
     try:
         with Session(engine) as session:

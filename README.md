@@ -66,6 +66,20 @@ $ make run_celery
 
 Access the experimental docs of swagger user interface and start the experiment by http://127.0.0.1:8000/docs
 
++ post task
+  + select <u>dataset and model</u>
+  + adjust the training args in the request body
+    + noted that `VERSION` means the different types of preprocessing strategy, see <u>dataset part</u> in **Appendix** for more details.
+  + execute the training task
+  + in the response body, it will return the **task_id**
+
+![](C:\Users\ychuang\PycharmProjects\scientificProject\graphs\openapi_1.PNG)
+
++ get task
+  + 
+
+![](C:\Users\ychuang\PycharmProjects\scientificProject\graphs\openapi_2.PNG)
+
 ### API
 
 + `/` 
@@ -194,7 +208,9 @@ Access the experimental docs of swagger user interface and start the experiment 
 
 ###### Dataset
 
-+ go_emotions
++ go_emotion
+  + dataset preprocessing with `*` which indicated `"VERSION"="small"` in the parameter of post task, otherwise use `"VERSION"="origin"`
+
 
 | Name          | Description                                                  | length |
 | ------------- | ------------------------------------------------------------ | ------ |
