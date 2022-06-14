@@ -29,10 +29,11 @@ def build_dataset(
         batch_size: int, max_len: int,
         n_sample: Union[int, str],
         train_val_split_rate: float = 0.8,
-        **kwargs
+        version: str = 'small'
 ):
     """
 
+    :param version:
     :param dataset_name: dataset name in settings and enum_helper.
     :param token_name: token name is equal to MODEL_CLASS keys name in settings.
     :param batch_size: training and validating batch_size.
@@ -48,8 +49,6 @@ def build_dataset(
         df = load_dataset("go_emotions", "raw")
         df = df['train'].to_pandas()
         logger.info(f"dataset shape: {df.shape}")
-
-        version = kwargs.get('version')
 
         if version == 'origin':
             label_cols = ['admiration', 'amusement', 'anger', 'annoyance', 'approval', 'caring', 'confusion',

@@ -54,12 +54,13 @@ class APIConfig(BaseSettings):
 class PostTaskData(BaseModel):
     # DATASET_NAME: DatasetName = DatasetName.go_emotion
     # MODEL_NAME: ModelName = ModelName.distil_bert
-    N_SAMPLE: int = 500
+    N_SAMPLE: int = 1000
     EPOCH: int = 10
     MAX_LEN: int = 50
     BATCH_SIZE: int = 32
-    LEARNING_RATE: float = 2e-5
+    LEARNING_RATE: float = 5e-5
     SPLIT_RATE: float = 0.8
+    VERSION: str = 'small'
 
 # dataset class
 # small is less classes version of dataset

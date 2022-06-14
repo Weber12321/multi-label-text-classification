@@ -99,7 +99,8 @@ def post_task(
                 body.MAX_LEN,
                 body.BATCH_SIZE,
                 body.SPLIT_RATE,
-                body.LEARNING_RATE
+                body.LEARNING_RATE,
+                body.VERSION
             ),
             queue='queue1'
         )
