@@ -174,13 +174,10 @@ Access the experimental docs of swagger user interface and start the experiment 
 
 ## Datasets
 
-| Name                                          | Description                       | Size (row)               | Source      | Link                                                         |
-| --------------------------------------------- | --------------------------------- | ------------------------ | ----------- | ------------------------------------------------------------ |
-| Questions from Cross Validated Stack Exchange | Q&A dataset                       | 85.1 k                   | Kaggle      | [Questions from Cross Validated Stack Exchange ](https://www.kaggle.com/datasets/stackoverflow/statsquestions?resource=download&select=Questions.csv) |
-| go_emotions                                   | emotions data from reddit comment | 43.41k / 5.426k / 5,427k | Huggingface | [go emotions](https://huggingface.co/datasets/go_emotions)   |
-|                                               |                                   |                          |             |                                                              |
-
-+ **Questions from Cross Validated Stack Exchange** dataset contained three datasets with question, answer and tags tables and the site also includes a `.sqlite` file. Join the question table with tags table to handle the text classification.
+| Name                         | Description                                     | Size (row)               | Source      | Link                                                       |
+| ---------------------------- | ----------------------------------------------- | ------------------------ | ----------- | ---------------------------------------------------------- |
+| go_emotions                  | emotions data from reddit comment               | 43.41k / 5.426k / 5,427k | Huggingface | [go emotions](https://huggingface.co/datasets/go_emotions) |
+| **Audience DL  multi-label** | manual labeling datasets from Chinese text data | 1k / 50k (optional)      | manual      |                                                            |
 
 + Download the **go_emotion** via Python `datasets` package: 
 
@@ -189,6 +186,11 @@ Access the experimental docs of swagger user interface and start the experiment 
   
   dataset = load_dataset("go_emotions")
   ```
+
++ **Audience DL multi-label** 為自主標註之中文多標籤多類別任務資料集
+  + 預期依據資料筆數分別標註 1k / 50k 兩份資料集
+  + 使用<u>規則模型</u>先行自動收集相關結果
+  + 再使用<u>doccano</u>平台進行標註驗證
 
 
 
