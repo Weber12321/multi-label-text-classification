@@ -53,6 +53,12 @@ PASSWORD=<password>
 HOST=<host>
 PORT=<port>
 SCHEMA=<schema>
+
+#Auto-annotating source database configuration
+A_USER=<user>
+A_PASSWORD=<password>
+A_HOST=<host>
+A_PORT=<port>
 ```
 
 Run the service
@@ -66,7 +72,9 @@ $ make run_celery
 
 Access the experimental docs of swagger user interface and start the experiment by http://127.0.0.1:8000/docs
 
-+ post task
+### API
+
++ `training`
   + select <u>dataset and model</u>
   + adjust the training args in the request body
     + noted that `VERSION` means the different types of preprocessing strategy, see <u>dataset part</u> in **Appendix** for more details.
@@ -75,95 +83,20 @@ Access the experimental docs of swagger user interface and start the experiment 
 
 ![](graphs/openapi_1.PNG)
 
-+ get task
-  + 
++ `get_task`
 
 ![](graphs/openapi_2.PNG)
 
-### API
++ `annotation`
+  + choose the database and rule_file version
+  + determine the multi threshold and expect output lenght
+  + modify the start and end date
+  + execute the flow
+    + the output data will be save in `data` directory named as `<database_name>_<n_multi_tresh>_<output size>.csv`
 
-+ `/` 
+![](graphs/openapi_3.PNG)
 
-  + GET
 
-    + response all training records
-
-    + response data
-
-      ```bash
-      [
-        {
-          "status": "failed",
-          "id": 2,
-          "dataset_name": "go_emotion",
-          "model_name": "distil_bert",
-          "create_time": "2022-06-01 16:55:49",
-          "total_time": null,
-          "training_args": "TrainingArguments(\n_n_gpu=0,\nadafactor=False,\nadam_beta1=0.9,\nadam_beta2=0.999,\nadam_epsilon=1e-08,\nauto_find_batch_size=False,\nbf16=False,\nbf16_full_eval=False,\ndata_seed=None,\ndataloader_drop_last=False,\ndataloader_num_workers=0,\ndataloader_pin_memory=True,\nddp_bucket_cap_mb=None,\nddp_find_unused_parameters=None,\ndebug=[],\ndeepspeed=None,\ndisable_tqdm=False,\ndo_eval=True,\ndo_predict=False,\ndo_train=False,\neval_accumulation_steps=None,\neval_delay=0,\neval_steps=None,\nevaluation_strategy=IntervalStrategy.EPOCH,\nfp16=False,\nfp16_backend=auto,\nfp16_full_eval=False,\nfp16_opt_level=O1,\nfsdp=[],\nfsdp_min_num_params=0,\nfull_determinism=False,\ngradient_accumulation_steps=1,\ngradient_checkpointing=False,\ngreater_is_better=None,\ngroup_by_length=False,\nhalf_precision_backend=auto,\nhub_model_id=None,\nhub_private_repo=False,\nhub_strategy=HubStrategy.EVERY_SAVE,\nhub_token=<HUB_TOKEN>,\nignore_data_skip=False,\ninclude_inputs_for_metrics=False,\nlabel_names=None,\nlabel_smoothing_factor=0.0,\nlearning_rate=2e-05,\nlength_column_name=length,\nload_best_model_at_end=False,\nlocal_rank=-1,\nlog_level=-1,\nlog_level_replica=-1,\nlog_on_each_node=True,\nlogging_dir=models\\runs\\Jun01_16-55-49_nuc373,\nlogging_first_step=False,\nlogging_nan_inf_filter=True,\nlogging_steps=12,\nlogging_strategy=IntervalStrategy.STEPS,\nlr_scheduler_type=SchedulerType.LINEAR,\nmax_grad_norm=1.0,\nmax_steps=-1,\nmetric_for_best_model=None,\nmp_parameters=,\nno_cuda=False,\nnum_train_epochs=3,\noptim=OptimizerNames.ADAMW_HF,\noutput_dir=models,\noverwrite_output_dir=False,\npast_index=-1,\nper_device_eval_batch_size=32,\nper_device_train_batch_size=32,\nprediction_loss_only=False,\npush_to_hub=False,\npush_to_hub_model_id=None,\npush_to_hub_organization=None,\npush_to_hub_token=<PUSH_TO_HUB_TOKEN>,\nremove_unused_columns=True,\nreport_to=[],\nresume_from_checkpoint=None,\nrun_name=models,\nsave_on_each_node=False,\nsave_steps=500,\nsave_strategy=IntervalStrategy.EPOCH,\nsave_total_limit=None,\nseed=42,\nsharded_ddp=[],\nskip_memory_metrics=True,\ntf32=None,\ntpu_metrics_debug=False,\ntpu_num_cores=None,\nuse_legacy_prediction_loop=False,\nwarmup_ratio=0.0,\nwarmup_steps=0,\nweight_decay=0.01,\nxpu_backend=None,\n)",
-          "training_result": null,
-          "evaluate_result": null,
-          "error_message": "(sqlite3.InterfaceError) Error binding parameter 2 - probably unsupported type.\n[SQL: UPDATE trainingtask SET status=?, total_time=?, training_result=?, evaluate_result=? WHERE trainingtask.id = ?]\n[parameters: ('finished', 1.6925429, TrainOutput(global_step=39, training_loss=0.41692265486105895, metrics={'train_runtime': 99.5837, 'train_samples_per_second': 12.291, 'train_steps_per_second': 0.392, 'train_loss': 0.41692265486105895, 'epoch': 3.0}), {'eval_loss': 0.3040769100189209, 'eval_accuracy_thresh': 0.9545807242393494, 'eval_runtime': 1.922, 'eval_samples_per_second': 47.867, 'eval_steps_per_second': 1.561, 'epoch': 3.0}, 2)]\n(Background on this error at: https://sqlalche.me/e/14/rvf5)"
-        },
-        {
-          "status": "finished",
-          "id": 3,
-          "dataset_name": "go_emotion",
-          "model_name": "distil_bert",
-          "create_time": "2022-06-01 17:11:29",
-          "total_time": 1.7146706333333335,
-          "training_args": "TrainingArguments(\n_n_gpu=0,\nadafactor=False,\nadam_beta1=0.9,\nadam_beta2=0.999,\nadam_epsilon=1e-08,\nauto_find_batch_size=False,\nbf16=False,\nbf16_full_eval=False,\ndata_seed=None,\ndataloader_drop_last=False,\ndataloader_num_workers=0,\ndataloader_pin_memory=True,\nddp_bucket_cap_mb=None,\nddp_find_unused_parameters=None,\ndebug=[],\ndeepspeed=None,\ndisable_tqdm=False,\ndo_eval=True,\ndo_predict=False,\ndo_train=False,\neval_accumulation_steps=None,\neval_delay=0,\neval_steps=None,\nevaluation_strategy=IntervalStrategy.EPOCH,\nfp16=False,\nfp16_backend=auto,\nfp16_full_eval=False,\nfp16_opt_level=O1,\nfsdp=[],\nfsdp_min_num_params=0,\nfull_determinism=False,\ngradient_accumulation_steps=1,\ngradient_checkpointing=False,\ngreater_is_better=None,\ngroup_by_length=False,\nhalf_precision_backend=auto,\nhub_model_id=None,\nhub_private_repo=False,\nhub_strategy=HubStrategy.EVERY_SAVE,\nhub_token=<HUB_TOKEN>,\nignore_data_skip=False,\ninclude_inputs_for_metrics=False,\nlabel_names=None,\nlabel_smoothing_factor=0.0,\nlearning_rate=2e-05,\nlength_column_name=length,\nload_best_model_at_end=False,\nlocal_rank=-1,\nlog_level=-1,\nlog_level_replica=-1,\nlog_on_each_node=True,\nlogging_dir=models\\runs\\Jun01_17-11-29_nuc373,\nlogging_first_step=False,\nlogging_nan_inf_filter=True,\nlogging_steps=12,\nlogging_strategy=IntervalStrategy.STEPS,\nlr_scheduler_type=SchedulerType.LINEAR,\nmax_grad_norm=1.0,\nmax_steps=-1,\nmetric_for_best_model=None,\nmp_parameters=,\nno_cuda=False,\nnum_train_epochs=3,\noptim=OptimizerNames.ADAMW_HF,\noutput_dir=models,\noverwrite_output_dir=False,\npast_index=-1,\nper_device_eval_batch_size=32,\nper_device_train_batch_size=32,\nprediction_loss_only=False,\npush_to_hub=False,\npush_to_hub_model_id=None,\npush_to_hub_organization=None,\npush_to_hub_token=<PUSH_TO_HUB_TOKEN>,\nremove_unused_columns=True,\nreport_to=[],\nresume_from_checkpoint=None,\nrun_name=models,\nsave_on_each_node=False,\nsave_steps=500,\nsave_strategy=IntervalStrategy.EPOCH,\nsave_total_limit=None,\nseed=42,\nsharded_ddp=[],\nskip_memory_metrics=True,\ntf32=None,\ntpu_metrics_debug=False,\ntpu_num_cores=None,\nuse_legacy_prediction_loop=False,\nwarmup_ratio=0.0,\nwarmup_steps=0,\nweight_decay=0.01,\nxpu_backend=None,\n)",
-          "training_result": "TrainOutput(global_step=39, training_loss=0.4436204127776317, metrics={'train_runtime': 100.6878, 'train_samples_per_second': 11.769, 'train_steps_per_second': 0.387, 'train_loss': 0.4436204127776317, 'epoch': 3.0})",
-          "evaluate_result": "{'eval_loss': 0.31640884280204773, 'eval_accuracy_thresh': 0.9588435292243958, 'eval_runtime': 2.142, 'eval_samples_per_second': 49.02, 'eval_steps_per_second': 1.867, 'epoch': 3.0}",
-          "error_message": null
-        }
-      ```
-
-  + POST
-
-    + request data
-
-      ```bash
-      {
-        "DATASET_NAME": "go_emotion",
-        "MODEL_NAME": "distil_bert",
-        "N_SAMPLE": 500,
-        "IS_TRAINER": 1,
-        "EPOCH": 3,
-        "BATCH_SIZE": 32,
-        "WEIGHT_DECAY": 0.01
-      }
-      ```
-
-    - response data
-
-      ```bash
-      OK
-      ```
-
-+ `/{id}`
-
-  + GET
-
-    + return the specific task information by task `id`
-
-    + response
-
-      ```bash
-      {
-        "status": "finished",
-        "id": 3,
-        "dataset_name": "go_emotion",
-        "model_name": "distil_bert",
-        "create_time": "2022-06-01 17:11:29",
-        "total_time": 1.7146706333333335,
-        "training_args": "TrainingArguments(\n_n_gpu=0,\nadafactor=False,\nadam_beta1=0.9,\nadam_beta2=0.999,\nadam_epsilon=1e-08,\nauto_find_batch_size=False,\nbf16=False,\nbf16_full_eval=False,\ndata_seed=None,\ndataloader_drop_last=False,\ndataloader_num_workers=0,\ndataloader_pin_memory=True,\nddp_bucket_cap_mb=None,\nddp_find_unused_parameters=None,\ndebug=[],\ndeepspeed=None,\ndisable_tqdm=False,\ndo_eval=True,\ndo_predict=False,\ndo_train=False,\neval_accumulation_steps=None,\neval_delay=0,\neval_steps=None,\nevaluation_strategy=IntervalStrategy.EPOCH,\nfp16=False,\nfp16_backend=auto,\nfp16_full_eval=False,\nfp16_opt_level=O1,\nfsdp=[],\nfsdp_min_num_params=0,\nfull_determinism=False,\ngradient_accumulation_steps=1,\ngradient_checkpointing=False,\ngreater_is_better=None,\ngroup_by_length=False,\nhalf_precision_backend=auto,\nhub_model_id=None,\nhub_private_repo=False,\nhub_strategy=HubStrategy.EVERY_SAVE,\nhub_token=<HUB_TOKEN>,\nignore_data_skip=False,\ninclude_inputs_for_metrics=False,\nlabel_names=None,\nlabel_smoothing_factor=0.0,\nlearning_rate=2e-05,\nlength_column_name=length,\nload_best_model_at_end=False,\nlocal_rank=-1,\nlog_level=-1,\nlog_level_replica=-1,\nlog_on_each_node=True,\nlogging_dir=models\\runs\\Jun01_17-11-29_nuc373,\nlogging_first_step=False,\nlogging_nan_inf_filter=True,\nlogging_steps=12,\nlogging_strategy=IntervalStrategy.STEPS,\nlr_scheduler_type=SchedulerType.LINEAR,\nmax_grad_norm=1.0,\nmax_steps=-1,\nmetric_for_best_model=None,\nmp_parameters=,\nno_cuda=False,\nnum_train_epochs=3,\noptim=OptimizerNames.ADAMW_HF,\noutput_dir=models,\noverwrite_output_dir=False,\npast_index=-1,\nper_device_eval_batch_size=32,\nper_device_train_batch_size=32,\nprediction_loss_only=False,\npush_to_hub=False,\npush_to_hub_model_id=None,\npush_to_hub_organization=None,\npush_to_hub_token=<PUSH_TO_HUB_TOKEN>,\nremove_unused_columns=True,\nreport_to=[],\nresume_from_checkpoint=None,\nrun_name=models,\nsave_on_each_node=False,\nsave_steps=500,\nsave_strategy=IntervalStrategy.EPOCH,\nsave_total_limit=None,\nseed=42,\nsharded_ddp=[],\nskip_memory_metrics=True,\ntf32=None,\ntpu_metrics_debug=False,\ntpu_num_cores=None,\nuse_legacy_prediction_loop=False,\nwarmup_ratio=0.0,\nwarmup_steps=0,\nweight_decay=0.01,\nxpu_backend=None,\n)",
-        "training_result": "TrainOutput(global_step=39, training_loss=0.4436204127776317, metrics={'train_runtime': 100.6878, 'train_samples_per_second': 11.769, 'train_steps_per_second': 0.387, 'train_loss': 0.4436204127776317, 'epoch': 3.0})",
-        "evaluate_result": "{'eval_loss': 0.31640884280204773, 'eval_accuracy_thresh': 0.9588435292243958, 'eval_runtime': 2.142, 'eval_samples_per_second': 49.02, 'eval_steps_per_second': 1.867, 'epoch': 3.0}",
-        "error_message": null
-      }
-      ```
-
-      
 
 ## Workflow
 
@@ -174,10 +107,10 @@ Access the experimental docs of swagger user interface and start the experiment 
 
 ## Datasets
 
-| Name                         | Description                                     | Size (row)               | Source      | Link                                                       |
-| ---------------------------- | ----------------------------------------------- | ------------------------ | ----------- | ---------------------------------------------------------- |
-| go_emotions                  | emotions data from reddit comment               | 43.41k / 5.426k / 5,427k | Huggingface | [go emotions](https://huggingface.co/datasets/go_emotions) |
-| **Audience DL  multi-label** | manual labeling datasets from Chinese text data | 1k / 50k (optional)      | manual      |                                                            |
+| Name                    | Description                                     | Size (row)               | Source      | Link                                                       |
+| ----------------------- | ----------------------------------------------- | ------------------------ | ----------- | ---------------------------------------------------------- |
+| go_emotions             | emotions data from reddit comment               | 43.41k / 5.426k / 5,427k | Huggingface | [go emotions](https://huggingface.co/datasets/go_emotions) |
+| Audience DL multi-label | manual labeling datasets from Chinese text data | 1k / 50k (optional)      | manual      |                                                            |
 
 + Download the **go_emotion** via Python `datasets` package: 
 
@@ -189,8 +122,8 @@ Access the experimental docs of swagger user interface and start the experiment 
 
 + **Audience DL multi-label** 為自主標註之中文多標籤多類別任務資料集
   + 預期依據資料筆數分別標註 1k / 50k 兩份資料集
-  + 使用<u>規則模型</u>先行自動收集相關結果
-  + 再使用<u>doccano</u>平台進行標註驗證
+  + 使用<u>規則 (正則表達式) 模型</u>先行自動收集相關結果
+  + 再使用 <u>doccano</u> 平台進行標註驗證
   + 詳情參考 <u>Appendix: Chinese data annotation</u> 流程
 
 
