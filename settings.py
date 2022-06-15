@@ -1,10 +1,10 @@
 import os
+from datetime import date
 
 import torch
 from dotenv import load_dotenv
+from dataclasses import dataclass
 from pydantic import BaseSettings, BaseModel
-
-from utils.enum_helper import DatasetName, ModelName
 
 load_dotenv('.env')
 
@@ -62,6 +62,12 @@ class PostTaskData(BaseModel):
     SPLIT_RATE: float = 0.8
     VERSION: str = 'small'
 
+
+class AutoAnnotation(BaseModel):
+    START_TIME: date = "2020-01-01"
+    END_TIME: date = "2021-01-01"
+
+
 # dataset class
 # small is less classes version of dataset
 DATA_CLASS = {
@@ -69,7 +75,7 @@ DATA_CLASS = {
 }
 
 # models
-MODEL_CLASS={
+MODEL_CLASS = {
     # "distil_bert": {
     #     "ckpt": "distilbert-base-uncased",
     #     "model": "model_class.distilbert.DistilBertForMultilabelSequenceClassification"
@@ -82,10 +88,25 @@ MODEL_CLASS={
     "rule_model": "rule_model"
 }
 
-# databases
+# database config for saving training results
 if DEBUG:
     DATABASE_URL = "sqlite:///training.db"
 else:
     DATABASE_URL = f'mysql+pymysql://{os.getenv("USER")}:' \
                    f'{os.getenv("PASSWORD")}@{os.getenv("HOST")}:' \
                    f'{os.getenv("PORT")}/{os.getenv("SCHEMA")}?charset=utf8mb4'
+
+
+# database config for scraping data
+@dataclass
+class DatabaseScrapConfig:
+    host: str = os.getenv('A_HOST')
+    port: int = int(os.getenv('A_PORT'))
+    user: str = os.getenv('A_USER')
+    password: str = os.getenv('A_PASSWORD')
+    charset: str = 'utf8mb4'
+
+
+CUSTOMIZE_SQL = None
+
+RULE_FILE_EXT = '.json'

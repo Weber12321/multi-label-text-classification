@@ -17,3 +17,14 @@ class ModelName(str, Enum):
 
 class DatasetName(str, Enum):
     go_emotion = "go_emotion"
+
+
+class DatabaseSelection(str, Enum):
+    wh_bbs_01 = "wh_bbs_01"
+    wh_blog_01 = "wh_blog_01"
+    wh_fb = "wh_fb"
+    wh_forum_01 = "wh_forum_01"
+
+
+class RuleSelection(str, Enum):
+    rule_data_v1 = "rule_data_v1"

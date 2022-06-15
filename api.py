@@ -8,10 +8,10 @@ from fastapi.responses import JSONResponse
 from loguru import logger
 from sqlmodel import create_engine, Session, select, SQLModel
 
-from celery_app import background_training
-from settings import APIConfig, LogDir, LogVar, PostTaskData, DATABASE_URL
+from celery_app import background_training, auto_annotation_flow
+from settings import APIConfig, LogDir, LogVar, PostTaskData, DATABASE_URL, AutoAnnotation
 from utils.database_helper import orm_cls_to_dict
-from utils.enum_helper import TrainingStatus, DatasetName, ModelName
+from utils.enum_helper import TrainingStatus, DatasetName, ModelName, DatabaseSelection, RuleSelection
 from utils.log_helper import get_log_name
 from workers.dbs_builder.databases import TrainingTask
 
@@ -30,6 +30,7 @@ logger.add(
 )
 
 description = """
+### Multi-label training task 
 This is a quick multi-label multi-class training flow build with fastapi and celery 
 which utilizes the [huggingface transformers](https://huggingface.co/docs/transformers/index) 
 tool. The current dataset of this project is [go_emotions](https://huggingface.co/datasets/go_emotions) 
@@ -46,6 +47,18 @@ with adjusting the training parameters, and check the results of the training st
 Noted that the training information is store in the log files in /logs directory and also 
 save in a default sqlite database in debug mode, you can specify the database configuration 
 in the `.env` and `settings.py` to switch the database.  
+    
+### Multi-label auto annotation task  
+For auto-annotating, it utilizes the regular expression model.
+Users can determine: 
+   
++ expected size of output dataset  
++ threshold of label size  
++ start and end scrapping date  
++ source database name  
++ rule file version 
+   
+The output dataset will be saved as `CSV` file with the column `text` and `labels` in the data directory.
 """
 
 app = FastAPI(
@@ -69,24 +82,7 @@ engine = create_engine(DATABASE_URL)
 SQLModel.metadata.create_all(engine)
 
 
-# @app.get('/', )
-# def render_tasks():
-#     try:
-#         with Session(engine) as session:
-#             statement = select(TrainingTask)
-#             results = session.exec(statement)
-#             outputs = [orm_cls_to_dict(r) for r in results]
-#             logger.info(f"{status.HTTP_200_OK}: {outputs}")
-#             return JSONResponse(status_code=status.HTTP_200_OK, content=jsonable_encoder(outputs))
-#
-#     except Exception as e:
-#         logger.error(f"{status.HTTP_500_INTERNAL_SERVER_ERROR}: {e}")
-#         return JSONResponse(
-#             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, content=jsonable_encoder(f"{e}")
-#         )
-
-
-@app.post('/', description="select a dataset and model first, and then adjust the params.")
+@app.post('/task/training', description="select a dataset and model first, and then adjust the params.")
 def post_task(
         body: PostTaskData,
         dataset_name: DatasetName,
@@ -134,7 +130,7 @@ def post_task(
                             content=jsonable_encoder(err_msg))
 
 
-@app.get('/{_id}', description="""
+@app.get('/task/{_id}', description="""
 return a task info by inputting a task_id, if the `status` shows `training` then the task 
 is still running, you can check the result if `status` becomes `finished`, or check the 
 `error_message` if the task is `failed`. 
@@ -153,6 +149,32 @@ def get_task(_id: int):
         return JSONResponse(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, content=jsonable_encoder(f"{e}")
         )
+
+
+@app.post('/task/annotation', description="""
+Execute the auto annotation flow using regular expression model.  
++ `n_multi_tresh`: the threshold of the length of output labels should return, e.g. `n_multi_tresh > 1` will only retrieve the data which contains 2 or higher number of labels.
++ `expect_output_data_length`: the number of data you expect to retrieve, if it meet the number the annotation flow will stop.
+The output of retrieved dataset will be save as CSV file in the data directory named as `<database_name>_<n_multi_tresh>_<length of output>.csv`
+""")
+def auto_annotation(
+        body: AutoAnnotation,
+        database_name: DatabaseSelection,
+        rule_file_name: RuleSelection,
+        n_multi_tresh: int = 0,
+        expect_output_data_length: int = 1000
+):
+    auto_annotation_flow.apply_async(
+        args=(
+            database_name,
+            rule_file_name,
+            n_multi_tresh,
+            expect_output_data_length,
+            body.START_TIME,
+            body.END_TIME
+        ),
+        queue='queue1'
+    )
 
 
 if __name__ == '__main__':
