@@ -164,17 +164,28 @@ def auto_annotation(
         n_multi_tresh: int = 0,
         expect_output_data_length: int = 1000
 ):
-    auto_annotation_flow.apply_async(
-        args=(
-            database_name,
-            rule_file_name,
-            n_multi_tresh,
-            expect_output_data_length,
-            body.START_TIME,
-            body.END_TIME
-        ),
-        queue='queue1'
-    )
+    try:
+        auto_annotation_flow.apply_async(
+            args=(
+                database_name,
+                rule_file_name,
+                n_multi_tresh,
+                expect_output_data_length,
+                body.START_TIME,
+                body.END_TIME
+            ),
+            queue='queue1'
+        )
+        logger.info(f"{status.HTTP_200_OK}")
+        return JSONResponse(status_code=status.HTTP_200_OK, content='OK')
+    except Exception as e:
+        logger.error(f"{status.HTTP_500_INTERNAL_SERVER_ERROR}: {e}")
+        return JSONResponse(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, content=jsonable_encoder(f"{e}")
+        )
+
+
+
 
 
 if __name__ == '__main__':

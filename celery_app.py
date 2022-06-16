@@ -1,7 +1,7 @@
+import json
 import os
 from datetime import datetime
 
-import pandas as pd
 from celery import Celery
 from loguru import logger
 from sqlmodel import create_engine, Session, select
@@ -43,6 +43,21 @@ logger.add(
 @celery_worker.task(name=f'{configuration.CELERY_NAME}.trainer_training', ignore_result=True)
 def background_training(task_id, dataset_name, model_name, n_sample,
                         epoch, max_len, batch_size, split_rate, lr_rate, version):
+    """
+
+    :param task_id: task id
+    :param dataset_name: dataset name, enum type, modify the selection in enum_helper.
+    :param model_name: model name, enum type, modify the selection in enum_helper,
+                enum value should corresponds to MODEL_CLASS in settings.py
+    :param n_sample: number of sample extract from total dataset.
+    :param epoch: training and validation epoch
+    :param max_len: max length of data tokenizing
+    :param batch_size: training and validation batch_size
+    :param split_rate: train / val data split size, float number between 0 to 1
+    :param lr_rate: learning rate of optimizer
+    :param version: special version of data preprocess, see the readme
+    :return: None
+    """
 
     engine = create_engine(DATABASE_URL)
     start_time = datetime.now()
@@ -120,6 +135,18 @@ def auto_annotation_flow(
         start: str,
         end: str,
 ):
+    """
+    :param db: database name
+    :param rule_file: rule file, modify the ext config in settings.py
+    :param n_multi_output: number of multi output threshold,
+                            e.g. 1 means the output will only save the data have 2
+                            or higher number of length of labels
+    :param expect_data_size: expected output data limit size, processing will stop if
+                            output dataset size meet this limit
+    :param start: start date, it is used in batch processing in the sql query
+    :param end: end date, it is used in batch processing in the sql query
+    :return: None
+    """
 
     if not start or not end:
         error_message = 'datetime params are missing'
@@ -146,24 +173,33 @@ def auto_annotation_flow(
         if num_data >= expect_data_size:
             logger.info(f"already meet the excepted length {num_data}")
             logger.info('==== finished processing ====')
-            return datasets
+            break
 
         dataset, checkpoint = elements
 
+        # TODO: add the text split function if the text data is too long
+
         logger.info(f"---- checkpoint: {checkpoint} ----")
         logger.info(f"length of data: {len(dataset)}")
+
+        # TODO: add a function which can return data that is not matched by rules
+
         output = model.predict(dataset)
         logger.info(f"length of output: {len(output)}")
 
         datasets.extend(output)
         num_data += len(output)
+        logger.info(f"length of temp total results {num_data}")
 
     logger.info(f"collected length of data {num_data}")
-    logger.info('==== start batch processing ====')
 
-    results = pd.DataFrame(datasets)
-    results_file_name = f"{db}_{n_multi_output}_{num_data}.csv"
-    results_file_path = os.path.join(DATA_DIR / results_file_name)
+    results = json.dumps(datasets, ensure_ascii=False)
+    # results = pd.DataFrame(datasets)
+    results_file_name = f"{db}_{n_multi_output}_{num_data}.json"
+    results_file_path = os.path.join(DATA_DIR / "auto_annotation_dir" / results_file_name)
 
     logger.info(f"writing results to file {results_file_name}")
-    results.to_csv(results_file_path, encoding="utf-8")
+    with open(results_file_path, 'w') as f:
+        f.write(results)
+
+    # results.to_csv(results_file_path, encoding="utf-8")

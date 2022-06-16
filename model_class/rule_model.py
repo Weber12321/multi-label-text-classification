@@ -78,7 +78,7 @@ class RuleModelWorker(ModelWorker):
                 results.append(
                     {
                         'text': _predict_str,
-                        'labels': _matched_labels
+                        'label': _matched_labels
                     }
                 )
 
