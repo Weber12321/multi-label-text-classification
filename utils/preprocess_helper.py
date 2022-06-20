@@ -43,9 +43,11 @@ def read_dataset_from_db(
         sql_statement = None,
         start: datetime = None,
         end: datetime = None,
-        interval: timedelta = timedelta(hours=4)
+        interval: timedelta = timedelta(hours=4),
+        char_length: int = 500
 ):
     """
+    :param char_length: int, max len of retrieval data
     :param db: dataset name
     :param sql_statement: custom sql statement
     :param start: start datetime of scraping
@@ -69,7 +71,9 @@ def read_dataset_from_db(
             with get_connection(db=db) as conn:
                 cursor = conn.cursor()
                 query = get_timedelta_query(
-                    start=start, end=temp_end
+                    start=start,
+                    end=temp_end,
+                    char_length=char_length
                 )
                 cursor.execute(query)
                 results = cursor.fetchall()
@@ -99,13 +103,15 @@ def get_connection(db: str):
 
 def get_timedelta_query(
         start: datetime, end: datetime,
-        table_name: str = "ts_page_content"
+        table_name: str = "ts_page_content",
+        char_length: int = 500
 ):
     query = f"""
     SELECT content 
     FROM {table_name} 
     WHERE post_time >= '{start}' 
     AND post_time <= '{end}' 
-    AND content IS NOT NULL"""
+    AND content IS NOT NULL 
+    AND char_length(content) > {char_length};"""
 
     return query

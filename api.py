@@ -154,7 +154,8 @@ def get_task(_id: int):
 @app.post('/task/annotation', description="""
 Execute the auto annotation flow using regular expression model.  
 + `n_multi_tresh`: the threshold of the length of output labels should return, e.g. `n_multi_tresh > 1` will only retrieve the data which contains 2 or higher number of labels.
-+ `expect_output_data_length`: the number of data you expect to retrieve, if it meet the number the annotation flow will stop.
++ `expect_output_data_length`: the number of data you expect to retrieve, if it meet the number the annotation flow will stop.  
++ `max_char_length`: the max length of the retrieval content size.   
 The output of retrieved dataset will be save as CSV file in the data directory named as `<database_name>_<n_multi_tresh>_<length of output>.csv`
 """)
 def auto_annotation(
@@ -162,7 +163,8 @@ def auto_annotation(
         database_name: DatabaseSelection,
         rule_file_name: RuleSelection,
         n_multi_tresh: int = 0,
-        expect_output_data_length: int = 1000
+        expect_output_data_length: int = 1000,
+        max_char_length: int = 200
 ):
     try:
         auto_annotation_flow.apply_async(
@@ -172,7 +174,8 @@ def auto_annotation(
                 n_multi_tresh,
                 expect_output_data_length,
                 body.START_TIME,
-                body.END_TIME
+                body.END_TIME,
+                max_char_length
             ),
             queue='queue1'
         )

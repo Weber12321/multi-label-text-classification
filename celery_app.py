@@ -134,8 +134,10 @@ def auto_annotation_flow(
         expect_data_size: int,
         start: str,
         end: str,
+        char_length: int
 ):
     """
+    :param char_length: max len of retrieval data content
     :param db: database name
     :param rule_file: rule file, modify the ext config in settings.py
     :param n_multi_output: number of multi output threshold,
@@ -167,7 +169,7 @@ def auto_annotation_flow(
     end_date = datetime.strptime(end, "%Y-%m-%dT00:00:00")
 
     for elements in read_dataset_from_db(
-            db=db, start=start_date, end=end_date
+            db=db, start=start_date, end=end_date, char_length=char_length
     ):
 
         if num_data >= expect_data_size:

@@ -94,7 +94,7 @@ Access the experimental docs of swagger user interface and start the experiment 
   + execute the flow
     + the output data will be save in `data` directory named as `<database_name>_<n_multi_tresh>_<output size>.csv`
 
-![](graphs/openapi_3.PNG)
+![](graphs/openapi_4.PNG)
 
 
 
@@ -149,7 +149,12 @@ Access the experimental docs of swagger user interface and start the experiment 
 
 ![](graphs/auto-labeling.png)
 
-+  upload result dataset to [rd2demo doccano](https://rd2demo.eland.com.tw/) platform to manually validate the dataset
++  upload result dataset to [rd2demo doccano](https://rd2demo.eland.com.tw/) platform to manually validate the dataset.
+
+###### Problems and Discussions
+
++ Too many spam or advertisement content inside the retrieval dataset:
+  + maybe adding the spam classifier to filter the data before performing the rule prediction will better?
 
 ### How to add a dataset?
 
