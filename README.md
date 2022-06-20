@@ -90,9 +90,11 @@ Access the experimental docs of swagger user interface and start the experiment 
 + `annotation`
   + choose the database and rule_file version
   + determine the multi threshold and expect output lenght
+  + choose the content length limit
   + modify the start and end date
   + execute the flow
     + the output data will be save in `data` directory named as `<database_name>_<n_multi_tresh>_<output size>.csv`
+  + Noted that you can modify `EXCLUDE_WORDS` in the `settings.py` to determine what data you want to exclude according to words
 
 ![](graphs/openapi_4.PNG)
 
