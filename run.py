@@ -3,6 +3,7 @@ from datetime import datetime
 import torch
 from loguru import logger
 from torch.nn import BCEWithLogitsLoss
+from torch.utils.tensorboard import SummaryWriter
 from transformers import AdamW, get_scheduler
 
 from evaluating.bert_pytorch import eval_epoch
@@ -26,6 +27,7 @@ logger.add(
 
 
 def run_training_flow(worker: BertModelWorker, task_id: int):
+
     optimizer = AdamW(
         worker.model.parameters(),
         lr=worker.learning_rate,
@@ -60,6 +62,9 @@ def run_training_flow(worker: BertModelWorker, task_id: int):
     best_train_acc_dict = {}
     best_val_acc_dict = {}
 
+    comment = f"batch_size = {len(worker.train_loader)} lr = {worker.learning_rate}"
+    tb = SummaryWriter(comment=comment)
+
     for epoch in range(1, worker.epoch + 1):
         logger.info('-' * 20)
         logger.info(f"Epoch {epoch} / {worker.epoch}")
@@ -74,6 +79,7 @@ def run_training_flow(worker: BertModelWorker, task_id: int):
             num_labels=worker.n_labels,
             loss_func=BCEWithLogitsLoss()
         )
+
         logger.info(f"training loss {train_loss}; training time {train_time}")
 
         val_loss, val_acc, val_time = eval_epoch(
@@ -96,9 +102,35 @@ def run_training_flow(worker: BertModelWorker, task_id: int):
             best_val_acc_dict.update(val_acc)
             print(f"best f1_score is updated: {best_acc}")
 
+        tb.add_scalar('Loss/train', train_loss, epoch)
+        tb.add_scalar('Loss/val', val_loss, epoch)
+        tb.add_scalar('Accuracy/train', train_acc['accuracy'], epoch)
+        tb.add_scalar('Accuracy/val', val_acc['accuracy'], epoch)
+        tb.add_scalar('f1_score/train', train_acc['f1'], epoch)
+        tb.add_scalar('f1_score/val', val_acc['f1'].epoch)
+        tb.add_scalar('precision/train', train_acc['precision'], epoch)
+        tb.add_scalar('precision/val', val_acc['precision'], epoch)
+        tb.add_scalar('recall/train', train_acc['recall'], epoch)
+        tb.add_scalar('recall/val', val_acc['recall'], epoch)
+
+        tb.add_hparams(
+            {
+                "lr": worker.learning_rate,
+                "bsize": len(worker.train_loader)
+             },
+            {
+                "train_f1": train_acc['f1'],
+                "val_f1": val_acc['f1'],
+                "train_loss": train_loss,
+                "val_loss": val_loss
+            },
+        )
+
     logger.info(' *** training is done !! *** ')
     logger.info(f"Best epoch: {best_epoch}")
     logger.info(f"Best f1_score: {best_acc}")
+
+    tb.close()
 
     return {
         'best_result': {
