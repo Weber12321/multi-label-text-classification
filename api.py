@@ -188,8 +188,5 @@ def auto_annotation(
         )
 
 
-
-
-
 if __name__ == '__main__':
     uvicorn.run("__main__:app", host=configuration.API_HOST, debug=True)

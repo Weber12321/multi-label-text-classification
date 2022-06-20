@@ -3,6 +3,7 @@ import json
 import os
 from dataclasses import asdict
 from datetime import datetime, timedelta
+from typing import List
 
 import numpy as np
 import pandas as pd
@@ -44,9 +45,11 @@ def read_dataset_from_db(
         start: datetime = None,
         end: datetime = None,
         interval: timedelta = timedelta(hours=4),
-        char_length: int = 500
+        char_length: int = 500,
+        filter_word_list: List[str] = None
 ):
     """
+    :param filter_word_list: words pattern you wanna exclude from retrieval data
     :param char_length: int, max len of retrieval data
     :param db: dataset name
     :param sql_statement: custom sql statement
@@ -73,7 +76,8 @@ def read_dataset_from_db(
                 query = get_timedelta_query(
                     start=start,
                     end=temp_end,
-                    char_length=char_length
+                    char_length=char_length,
+                    filter_word_list=filter_word_list
                 )
                 cursor.execute(query)
                 results = cursor.fetchall()
@@ -104,14 +108,28 @@ def get_connection(db: str):
 def get_timedelta_query(
         start: datetime, end: datetime,
         table_name: str = "ts_page_content",
-        char_length: int = 500
+        char_length: int = 500,
+        filter_word_list: List[str] = None
 ):
-    query = f"""
-    SELECT content 
-    FROM {table_name} 
-    WHERE post_time >= '{start}' 
-    AND post_time <= '{end}' 
-    AND content IS NOT NULL 
-    AND char_length(content) > {char_length};"""
+    if filter_word_list:
+        filter_char = "%' AND content NOT LIKE '%".join(filter_word_list)
+        filter_char = " content NOT LIKE " + "'%" + filter_char + "%'"
+
+        query = f"""
+        SELECT content 
+        FROM {table_name} 
+        WHERE post_time >= '{start}' 
+        AND post_time <= '{end}' 
+        AND content IS NOT NULL 
+        AND char_length(content) < {char_length} 
+        AND {filter_char};"""
+    else:
+        query = f"""
+        SELECT content 
+        FROM {table_name} 
+        WHERE post_time >= '{start}' 
+        AND post_time <= '{end}' 
+        AND content IS NOT NULL 
+        AND char_length(content) < {char_length};"""
 
     return query

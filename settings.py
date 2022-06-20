@@ -110,3 +110,19 @@ class DatabaseScrapConfig:
 CUSTOMIZE_SQL = None
 
 RULE_FILE_EXT = '.json'
+
+EXCLUDE_WORDS = [
+    "魔羯", "山羊",
+    "水瓶", "寶瓶",
+    "雙魚",
+    "牡羊", "白羊",
+    "金牛",
+    "雙子",
+    "巨蟹",
+    "獅子",
+    "處女",
+    "天秤",
+    "天平",
+    "天蠍",
+    "射手"
+]

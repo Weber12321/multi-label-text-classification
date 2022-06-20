@@ -9,7 +9,7 @@ from sqlmodel import create_engine, Session, select
 from definition import DATA_DIR
 from model_class.rule_model import RuleModelWorker
 from run import run_training_flow
-from settings import CeleryConfig, DATABASE_URL, LogDir, LogVar
+from settings import CeleryConfig, DATABASE_URL, LogDir, LogVar, EXCLUDE_WORDS
 from utils.enum_helper import TrainingStatus
 from utils.log_helper import get_log_name
 from utils.preprocess_helper import read_dataset_from_db
@@ -169,7 +169,7 @@ def auto_annotation_flow(
     end_date = datetime.strptime(end, "%Y-%m-%dT00:00:00")
 
     for elements in read_dataset_from_db(
-            db=db, start=start_date, end=end_date, char_length=char_length
+            db=db, start=start_date, end=end_date, char_length=char_length, filter_word_list=EXCLUDE_WORDS
     ):
 
         if num_data >= expect_data_size:
