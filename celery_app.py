@@ -134,9 +134,11 @@ def auto_annotation_flow(
         expect_data_size: int,
         start: str,
         end: str,
-        char_length: int
+        char_length: int,
+        sub_set_keep: str
 ):
     """
+    :param sub_set_keep: filter out what tags you want to predict
     :param char_length: max len of retrieval data content
     :param db: database name
     :param rule_file: rule file, modify the ext config in settings.py
@@ -157,7 +159,8 @@ def auto_annotation_flow(
 
     model = RuleModelWorker(
         filename=rule_file,
-        multi_output_threshold=n_multi_output
+        multi_output_threshold=n_multi_output,
+        sub_set_keep=json.loads(sub_set_keep)
     )
     logger.debug('initializing model ...')
     model.initialize_model()

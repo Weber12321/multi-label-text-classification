@@ -1,7 +1,9 @@
+import json
 from datetime import datetime
+from typing import List
 
 import uvicorn
-from fastapi import FastAPI, Request, status
+from fastapi import FastAPI, Request, status, Query
 from fastapi.encoders import jsonable_encoder
 from fastapi.exceptions import RequestValidationError
 from fastapi.responses import JSONResponse
@@ -11,7 +13,7 @@ from sqlmodel import create_engine, Session, select, SQLModel
 from celery_app import background_training, auto_annotation_flow
 from settings import APIConfig, LogDir, LogVar, PostTaskData, DATABASE_URL, AutoAnnotation
 from utils.database_helper import orm_cls_to_dict
-from utils.enum_helper import TrainingStatus, DatasetName, ModelName, DatabaseSelection, RuleSelection
+from utils.enum_helper import TrainingStatus, DatasetName, ModelName, DatabaseSelection, RuleSelection, TagSelection
 from utils.log_helper import get_log_name
 from workers.dbs_builder.databases import TrainingTask
 
@@ -162,6 +164,7 @@ def auto_annotation(
         body: AutoAnnotation,
         database_name: DatabaseSelection,
         rule_file_name: RuleSelection,
+        target_tags: List[TagSelection] = Query(...),
         n_multi_tresh: int = 0,
         expect_output_data_length: int = 1000,
         max_char_length: int = 200
@@ -175,7 +178,8 @@ def auto_annotation(
                 expect_output_data_length,
                 body.START_TIME,
                 body.END_TIME,
-                max_char_length
+                max_char_length,
+                json.dumps(target_tags, ensure_ascii=False)
             ),
             queue='queue1'
         )

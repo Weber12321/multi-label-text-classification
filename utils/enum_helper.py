@@ -28,3 +28,14 @@ class DatabaseSelection(str, Enum):
 
 class RuleSelection(str, Enum):
     rule_data_v1 = "rule_data_v1"
+
+
+class TagSelection(str, Enum):
+    male = "男性"
+    female = "女性"
+    employee = "上班族"
+    student = "學生"
+    parenting = "有子女"
+    young = "青年"
+    married = "已婚"
+    unmarried = "未婚"

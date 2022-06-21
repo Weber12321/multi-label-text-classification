@@ -3,7 +3,7 @@ import json
 import os
 from dataclasses import asdict
 from datetime import datetime, timedelta
-from typing import List
+from typing import List, Dict
 
 import numpy as np
 import pandas as pd
@@ -31,12 +31,24 @@ def custom_train_test_split(df: pd.DataFrame, log: logger, rate: float = 0.8):
     return df_train, df_test
 
 
-def read_rule_json(filename):
+def read_rule_json(filename, sub_set_keep: List[str] = None):
     filename = filename + RULE_FILE_EXT
     path = os.path.join(DATA_DIR, filename)
     with open(path, 'r') as f:
         rules = json.load(f)
-    return rules
+    return filter_rules(rules, sub_set_keep=sub_set_keep)
+
+
+def filter_rules(
+        rules: Dict[str, List[str]],
+        sub_set_keep: List[str] = None
+) -> Dict[str, List[str]]:
+    if not sub_set_keep:
+        return rules
+
+    filter_rules_dict = {tag: rules.get(tag) for tag in sub_set_keep}
+    return filter_rules_dict
+
 
 
 def read_dataset_from_db(

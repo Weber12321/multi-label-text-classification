@@ -17,7 +17,8 @@ class RuleModelWorker(ModelWorker):
             dataset_name: str = None,
             model_name: str = "rule_model",
             case_sensitive: bool = False,
-            multi_output_threshold: int = 0
+            multi_output_threshold: int = 0,
+            sub_set_keep: List[str] = None
     ):
         super().__init__(dataset_name, model_name)
         self.filename = filename
@@ -26,6 +27,7 @@ class RuleModelWorker(ModelWorker):
         self.logger = logger
         self.case_sensitive = case_sensitive
         self.multi_output_threshold = multi_output_threshold
+        self.sub_set_keep = sub_set_keep
         self.config_logger()
 
     def initialize_model(self):
@@ -39,7 +41,9 @@ class RuleModelWorker(ModelWorker):
         pass
 
     def load_rules(self):
-        self.rules: Dict[str, List[str]] = read_rule_json(self.filename)
+        self.rules: Dict[str, List[str]] = read_rule_json(
+            self.filename, sub_set_keep=self.sub_set_keep
+        )
         self.labels = [label for label in self.rules.keys()]
         self.logger.debug(f"label size: {len(self.labels)}")
 
