@@ -157,6 +157,8 @@ def auto_annotation_flow(
         logger.error(error_message)
         raise ValueError(error_message)
 
+    # logger.debug(f"{json.loads(sub_set_keep)}")
+
     model = RuleModelWorker(
         filename=rule_file,
         multi_output_threshold=n_multi_output,

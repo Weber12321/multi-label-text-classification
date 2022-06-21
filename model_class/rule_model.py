@@ -46,6 +46,7 @@ class RuleModelWorker(ModelWorker):
         )
         self.labels = [label for label in self.rules.keys()]
         self.logger.debug(f"label size: {len(self.labels)}")
+        # self.logger.debug(f"{self.rules}")
 
     def predict(self, input_examples: Iterable[str]):
         examples = parse_predict_target(
@@ -65,6 +66,10 @@ class RuleModelWorker(ModelWorker):
             _match_count_list = []
             _matched_labels = []
             for label, patterns in self.rules.items():
+
+                if not patterns:
+                    continue
+
                 _matched_count = 0
                 _match_pattern = []
                 for pattern in patterns:

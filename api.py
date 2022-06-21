@@ -154,7 +154,8 @@ def get_task(_id: int):
 
 
 @app.post('/task/annotation', description="""
-Execute the auto annotation flow using regular expression model.  
+Execute the auto annotation flow using regular expression model.    
++ `target_tags`: multiple selection of the tags in which match the data you want to retrieved.
 + `n_multi_tresh`: the threshold of the length of output labels should return, e.g. `n_multi_tresh > 1` will only retrieve the data which contains 2 or higher number of labels.
 + `expect_output_data_length`: the number of data you expect to retrieve, if it meet the number the annotation flow will stop.  
 + `max_char_length`: the max length of the retrieval content size.   
