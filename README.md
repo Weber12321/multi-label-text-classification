@@ -109,10 +109,12 @@ Access the experimental docs of swagger user interface and start the experiment 
 
 ## Datasets
 
-| Name                    | Description                                     | Size (row)               | Source      | Link                                                       |
-| ----------------------- | ----------------------------------------------- | ------------------------ | ----------- | ---------------------------------------------------------- |
-| go_emotions             | emotions data from reddit comment               | 43.41k / 5.426k / 5,427k | Huggingface | [go emotions](https://huggingface.co/datasets/go_emotions) |
-| Audience DL multi-label | manual labeling datasets from Chinese text data | 1k / 50k (optional)      | manual      |                                                            |
+| Name                | Description                       | Size (row)               | Source      | Link                                                       |
+| ------------------- | --------------------------------- | ------------------------ | ----------- | ---------------------------------------------------------- |
+| go_emotions         | emotions data from reddit comment | 43.41k / 5.426k / 5,427k | Huggingface | [go emotions](https://huggingface.co/datasets/go_emotions) |
+| Audience Tiny (AT)  | Chinese datasetset                | 0.45k                    | manual      |                                                            |
+| Audience Small (AS) | Chinese datasetset                | 2k                       | manual      | under annotation                                           |
+| Audience Large (AL) | Chinese datasetset                | 10k                      | manual      | under annotation                                           |
 
 + Download the **go_emotion** via Python `datasets` package: 
 
@@ -123,7 +125,7 @@ Access the experimental docs of swagger user interface and start the experiment 
   ```
 
 + **Audience DL multi-label** 為自主標註之中文多標籤多類別任務資料集
-  + 預期依據資料筆數分別標註 1k / 50k 兩份資料集
+  + 預期依據資料筆數分別標註 500 / 2k / 10k 三份資料集
   + 使用<u>規則 (正則表達式) 模型</u>先行自動收集相關結果
   + 再使用 <u>doccano</u> 平台進行標註驗證
   + 詳情參考 <u>Appendix: Chinese data annotation</u> 流程
@@ -132,14 +134,17 @@ Access the experimental docs of swagger user interface and start the experiment 
 
 ## Models
 
-| Name          | note                                                         |
-| ------------- | ------------------------------------------------------------ |
-| Random Forest | The best result of **Baseline model** is training with <u>[classifier chain](https://en.wikipedia.org/wiki/Classifier_chains)</u> method. |
-| aLBERT        | [docs](https://huggingface.co/albert-base-v2)                |
-| BERT          | [docs](https://huggingface.co/bert-base-uncased)             |
-| roBERTa       | [docs](https://huggingface.co/roberta-base)                  |
-| XLNet         | [docs](https://huggingface.co/xlnet-base-cased)              |
-| XLM-roBERTa   | [docs](https://huggingface.co/xlm-roberta-base)              |
+| Name                    | note                                                         |
+| ----------------------- | ------------------------------------------------------------ |
+| Random Forest           | The best **Baseline model** with <u>[classifier chain](https://en.wikipedia.org/wiki/Classifier_chains)</u> |
+| aLBERT                  | [docs](https://huggingface.co/albert-base-v2)                |
+| BERT                    | [docs](https://huggingface.co/bert-base-uncased)             |
+| roBERTa                 | [docs](https://huggingface.co/roberta-base)                  |
+| XLNet                   | [docs](https://huggingface.co/xlnet-base-cased)              |
+| XLM-roBERTa             | [docs](https://huggingface.co/xlm-roberta-base)              |
+| chinese-bert-wwm-ext    | [docs](https://huggingface.co/hfl/chinese-bert-wwm-ext)      |
+| chinese-macbert-base    | [docs](https://huggingface.co/hfl/chinese-macbert-base)      |
+| chinese-roberta-wwm-ext | [docs](https://huggingface.co/hfl/chinese-roberta-wwm-ext)   |
 
 
 
@@ -235,3 +240,26 @@ We use the [transformers](https://huggingface.co/docs/transformers/index) models
 | XLM-roBERTa | go_emotions_s* | epoch: 10<br/>batch_size: 32<br/>learning_rate: 5e-5 |                                                              |
 | XLM-roBERTa | go_emotions*   | epoch: 10<br/>batch_size: 32<br/>learning_rate: 2e-5 | training acc {'precision': 70.50961824008468, 'recall': 53.79626096909577, 'f1': 59.43265011622799}<br/>validation acc {'precision': 59.80590794913827, 'recall': 48.25650933848561, 'f1': 52.654950536253175} |
 
+###### BERT with audience dataset
+
+See `wandb` to track each run's details: [Audience_bert](https://wandb.ai/weber12321/audience_bert?workspace=user-weber12321)
+
++ base
+
+| model                       | epoch | batch | learning rate | f1 score (%) | dataset |
+| --------------------------- | ----- | ----- | ------------- | ------------ | ------- |
+| bert-base-uncased           | 100   | 64    | 2e-5          | 54           | AT      |
+| bert-base-chinese           | 100   | 64    | 2e-5          | 79.06        | AT      |
+| albert-base-v2              | 100   | 64    | 2e-5          | 31           | AT      |
+| roberta-base                | 100   | 64    | 2e-5          | 46           | AT      |
+| xlm-roberta-base            | 100   | 64    | 2e-5          | 78.65        | AT      |
+| hfl/chinese-bert-wwm-ext    | 100   | 64    | 2e-5          | 79.12        | AT      |
+| hfl/chinese-macbert-base    | 100   | 64    | 2e-5          | 79.37        | AT      |
+| hfl/chinese-roberta-wwm-ext | 100   | 64    | 2e-5          | 79.65        | AT      |
+
++ large
+
+| model                             | epoch | batch | learning rate | f1 score (%) | dataset |
+| --------------------------------- | ----- | ----- | ------------- | ------------ | ------- |
+| hfl/chinese-macbert-large         | 50    | 32    | 2e-5          | 75.47        | AT      |
+| hfl/chinese-roberta-wwm-ext-large | 50    | 32    | 2e-5          | 76.67        | AT      |
