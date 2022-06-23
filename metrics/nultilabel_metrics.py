@@ -54,3 +54,14 @@ def accuracy_thresh(y_pred, y_true, thresh=0.5, average='weighted'):
         'recall': r * 100,
         'f1': f * 100
     }
+
+
+def sigmoid_logits_to_one_hot(arr: np.array, thresh=0.5):
+    arr[arr > thresh] = 1
+    arr[arr <= thresh] = 0
+    return arr.astype(int)
+
+
+def classification_report(model, test_data_loader, path, device):
+    # todo: add classification report and false prediction output
+    pass

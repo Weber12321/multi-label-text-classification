@@ -6,7 +6,7 @@ from torch.nn import BCEWithLogitsLoss
 from torch.utils.tensorboard import SummaryWriter
 from transformers import AdamW, get_scheduler
 
-from evaluating.bert_pytorch import eval_epoch
+from evaluation.bert_pytorch import eval_epoch
 from settings import LogDir, LogVar
 from training.bert_pytorch import train_epoch
 from utils.log_helper import get_log_name
