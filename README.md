@@ -244,22 +244,17 @@ We use the [transformers](https://huggingface.co/docs/transformers/index) models
 
 See `wandb` to track each run's details: [Audience_bert](https://wandb.ai/weber12321/audience_bert?workspace=user-weber12321)
 
-+ base
 
-| model                       | epoch | batch | learning rate | f1 score (%) | dataset |
-| --------------------------- | ----- | ----- | ------------- | ------------ | ------- |
-| bert-base-uncased           | 100   | 64    | 2e-5          | 54           | AT      |
-| bert-base-chinese           | 100   | 64    | 2e-5          | 79.06        | AT      |
-| albert-base-v2              | 100   | 64    | 2e-5          | 31           | AT      |
-| roberta-base                | 100   | 64    | 2e-5          | 46           | AT      |
-| xlm-roberta-base            | 100   | 64    | 2e-5          | 78.65        | AT      |
-| hfl/chinese-bert-wwm-ext    | 100   | 64    | 2e-5          | 79.12        | AT      |
-| hfl/chinese-macbert-base    | 100   | 64    | 2e-5          | 79.37        | AT      |
-| hfl/chinese-roberta-wwm-ext | 100   | 64    | 2e-5          | 79.65        | AT      |
-
-+ large
 
 | model                             | epoch | batch | learning rate | f1 score (%) | dataset |
 | --------------------------------- | ----- | ----- | ------------- | ------------ | ------- |
+| bert-base-uncased                 | 100   | 64    | 2e-5          | 54           | AT      |
+| bert-base-chinese                 | 100   | 64    | 2e-5          | 79.06        | AT      |
+| albert-base-v2                    | 100   | 64    | 2e-5          | 31           | AT      |
+| roberta-base                      | 100   | 64    | 2e-5          | 46           | AT      |
+| xlm-roberta-base                  | 100   | 64    | 2e-5          | 78.65        | AT      |
+| hfl/chinese-bert-wwm-ext          | 100   | 64    | 2e-5          | **79.12**    | AT      |
+| hfl/chinese-macbert-base          | 100   | 64    | 2e-5          | **79.37**    | AT      |
+| hfl/chinese-roberta-wwm-ext       | 100   | 64    | 2e-5          | **79.65**    | AT      |
 | hfl/chinese-macbert-large         | 50    | 32    | 2e-5          | 75.47        | AT      |
 | hfl/chinese-roberta-wwm-ext-large | 50    | 32    | 2e-5          | 76.67        | AT      |
