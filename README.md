@@ -211,16 +211,16 @@ We use the [transformers](https://huggingface.co/docs/transformers/index) models
 
 + metrics: accuracy and f1_score
 
-| Name      | dataset     | method                   | accuracy                                                     |
-| --------- | ----------- | ------------------------ | ------------------------------------------------------------ |
-| RF        | go_emotions |                          | acc: 95.7194 <br />micro avg 17.667207 <br />macro avg 10.599551 <br />weighted avg 14.287957 |
-| kNN       | go_emotions |                          | acc: 95.7184 <br />micro avg 16.128085 <br />macro avg 9.279948 <br />weighted avg 13.678768 |
-| RF        | go_emotions | sklearn multi output     | acc: 95.7370 <br />micro avg 17.362550 <br />macro avg 10.471720 <br />weighted avg 13.940626 |
-| LinearSVC | go_emotions | sklearn multi output     | acc: 95.9625 <br />micro avg 14.273205 <br />macro avg 8.714187 <br />weighted avg 10.206662 |
-| LR        | go_emotions | sklearn multi output     | acc: 95.9509 <br />micro avg 14.033272 <br />macro avg 9.029469 <br />weighted avg 10.311118 |
-| RF        | go_emotions | sklearn classifier chain | acc: 94.6698<br/>micro avg 32.595297<br/>macro avg 13.468366<br/>weighted avg 23.166349 |
-| LinearSVC | go_emotions | sklearn classifier chain | acc: 94.7122<br/>micro avg 32.461811<br/>macro avg 10.715990<br/>weighted avg 20.726128 |
-| LR        | go_emotions | sklearn classifier chain | acc: 94.73414<br/>micro avg 32.733890<br/>macro avg 11.458806<br/>weighted avg 21.258039 |
+| Name      | dataset         | method                       | accuracy                                                     |
+| --------- | --------------- | ---------------------------- | ------------------------------------------------------------ |
+| RF        | go_emotions     |                              | acc: 95.7194 <br />micro avg 17.667207 <br />macro avg 10.599551 <br />weighted avg 14.287957 |
+| kNN       | go_emotions     |                              | acc: 95.7184 <br />micro avg 16.128085 <br />macro avg 9.279948 <br />weighted avg 13.678768 |
+| RF        | go_emotions     | sklearn multi output         | acc: 95.7370 <br />micro avg 17.362550 <br />macro avg 10.471720 <br />weighted avg 13.940626 |
+| LinearSVC | go_emotions     | sklearn multi output         | acc: 95.9625 <br />micro avg 14.273205 <br />macro avg 8.714187 <br />weighted avg 10.206662 |
+| LR        | go_emotions     | sklearn multi output         | acc: 95.9509 <br />micro avg 14.033272 <br />macro avg 9.029469 <br />weighted avg 10.311118 |
+| **RF**    | **go_emotions** | **sklearn classifier chain** | acc: 94.6698<br/>micro avg 32.595297<br/>macro avg 13.468366<br/>weighted avg 23.166349 |
+| LinearSVC | go_emotions     | sklearn classifier chain     | acc: 94.7122<br/>micro avg 32.461811<br/>macro avg 10.715990<br/>weighted avg 20.726128 |
+| LR        | go_emotions     | sklearn classifier chain     | acc: 94.73414<br/>micro avg 32.733890<br/>macro avg 11.458806<br/>weighted avg 21.258039 |
 
 
 
@@ -245,15 +245,16 @@ We use the [transformers](https://huggingface.co/docs/transformers/index) models
 
 See `wandb` to track each run's details: [Audience_bert](https://wandb.ai/weber12321/audience_bert?workspace=user-weber12321)
 
-| model                             | epoch | batch | learning rate | f1 score (%) | dataset |
-| --------------------------------- | ----- | ----- | ------------- | ------------ | ------- |
-| bert-base-uncased                 | 100   | 64    | 2e-5          | 54           | AT      |
-| bert-base-chinese                 | 100   | 64    | 2e-5          | 79.06        | AT      |
-| albert-base-v2                    | 100   | 64    | 2e-5          | 31           | AT      |
-| roberta-base                      | 100   | 64    | 2e-5          | 46           | AT      |
-| xlm-roberta-base                  | 100   | 64    | 2e-5          | 78.65        | AT      |
-| **hfl/chinese-bert-wwm-ext**      | 100   | 64    | 2e-5          | **79.12**    | AT      |
-| **hfl/chinese-macbert-base**      | 100   | 64    | 2e-5          | **79.37**    | AT      |
-| **hfl/chinese-roberta-wwm-ext**   | 100   | 64    | 2e-5          | **79.65**    | AT      |
-| hfl/chinese-macbert-large         | 50    | 32    | 2e-5          | 75.47        | AT      |
-| hfl/chinese-roberta-wwm-ext-large | 50    | 32    | 2e-5          | 76.67        | AT      |
++ baseline: random forest (CH)
+
+| model                           | epoch | batch | learning rate | f1 score | dataset |
+| ------------------------------- | ----- | ----- | ------------- | -------- | ------- |
+| baseline                        | -     | -     | -             | 0.08     | AT      |
+| albert-base-v2                  | 100   | 64    | 2e-5          | 0.28     | AT      |
+| roberta-base                    | 100   | 64    | 2e-5          | 0.45     | AT      |
+| bert-base-uncased               | 100   | 64    | 2e-5          | 0.55     | AT      |
+| bert-base-chinese               | 100   | 64    | 2e-5          | 0.81     | AT      |
+| hfl/chinese-bert-wwm-ext        | 100   | 64    | 2e-5          | 0.81     | AT      |
+| **xlm-roberta-base**            | 100   | 64    | 2e-5          | **0.82** | AT      |
+| **hfl/chinese-macbert-base**    | 100   | 64    | 2e-5          | **0.82** | AT      |
+| **hfl/chinese-roberta-wwm-ext** | 100   | 64    | 2e-5          | **0.83** | AT      |

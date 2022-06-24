@@ -1,7 +1,8 @@
 import numpy as np
+import pandas as pd
 import torch
 
-from sklearn.metrics import accuracy_score, precision_score, recall_score, f1_score
+from sklearn.metrics import accuracy_score, precision_score, recall_score, f1_score, classification_report
 
 # def accuracy_thresh(y_pred, y_true, thresh=0.5, sigmoid=True):
 #     y_pred = torch.from_numpy(y_pred)
@@ -9,6 +10,7 @@ from sklearn.metrics import accuracy_score, precision_score, recall_score, f1_sc
 #     if sigmoid:
 #       y_pred = y_pred.sigmoid()
 #     return ((y_pred>thresh)==y_true.bool()).float().mean().item()
+from prediction.bert_pytorch import get_prediction
 
 
 def compute_metrics(eval_pred):
@@ -62,6 +64,15 @@ def sigmoid_logits_to_one_hot(arr: np.array, thresh=0.5):
     return arr.astype(int)
 
 
-def classification_report(model, test_data_loader, path, device):
-    # todo: add classification report and false prediction output
-    pass
+def get_classification_report(model, test_data_loader, path, device, label_col):
+    y_review_texts, y_pred, y_test = get_prediction(model, test_data_loader, path, device)
+    report = classification_report(y_test, y_pred, target_names=label_col)
+    false_prediction = [['text', 'label', 'predict']]
+    for i in range(len(y_pred)):
+        if y_pred[i] != y_test[i]:
+            false_prediction.append([y_review_texts[i], y_test[i], y_pred[i]])
+
+    false_prediction_df = pd.DataFrame(false_prediction[1:], columns=false_prediction[0])
+
+    return report, false_prediction_df
+
