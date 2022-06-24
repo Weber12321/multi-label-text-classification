@@ -247,14 +247,20 @@ See `wandb` to track each run's details: [Audience_bert](https://wandb.ai/weber1
 
 + baseline: random forest (CH)
 
-| model                           | epoch | batch | learning rate | f1 score | dataset |
-| ------------------------------- | ----- | ----- | ------------- | -------- | ------- |
-| baseline                        | -     | -     | -             | 0.08     | AT      |
-| albert-base-v2                  | 100   | 64    | 2e-5          | 0.28     | AT      |
-| roberta-base                    | 100   | 64    | 2e-5          | 0.45     | AT      |
-| bert-base-uncased               | 100   | 64    | 2e-5          | 0.55     | AT      |
-| bert-base-chinese               | 100   | 64    | 2e-5          | 0.81     | AT      |
-| hfl/chinese-bert-wwm-ext        | 100   | 64    | 2e-5          | 0.81     | AT      |
-| **xlm-roberta-base**            | 100   | 64    | 2e-5          | **0.82** | AT      |
-| **hfl/chinese-macbert-base**    | 100   | 64    | 2e-5          | **0.82** | AT      |
-| **hfl/chinese-roberta-wwm-ext** | 100   | 64    | 2e-5          | **0.83** | AT      |
+| model                           | epoch | batch | learning rate | f1 score | dataset | model_size (MB) |
+| ------------------------------- | ----- | ----- | ------------- | -------- | ------- | --------------- |
+| baseline                        | -     | -     | -             | 0.08     | AT      | -               |
+| albert-base-v2                  | 100   | 64    | 2e-5          | 0.28     | AT      | 44.6            |
+| roberta-base                    | 100   | 64    | 2e-5          | 0.45     | AT      | 475.52          |
+| bert-base-uncased               | 100   | 64    | 2e-5          | 0.55     | AT      | 417.46          |
+| bert-base-chinese               | 100   | 64    | 2e-5          | 0.81     | AT      | 390.15          |
+| hfl/chinese-bert-wwm-ext        | 100   | 64    | 2e-5          | 0.81     | AT      | 390.15          |
+| **xlm-roberta-base**            | 100   | 64    | 2e-5          | **0.82** | AT      | 1060.68         |
+| **hfl/chinese-macbert-base**    | 100   | 64    | 2e-5          | **0.82** | AT      | 390.15          |
+| **hfl/chinese-roberta-wwm-ext** | 100   | 64    | 2e-5          | **0.83** | AT      | 390.15          |
+
++ training fl score
+![](graphs/training_f1.PNG)
++ validation f1 score
+
+![](graphs/val_f1.PNG)
