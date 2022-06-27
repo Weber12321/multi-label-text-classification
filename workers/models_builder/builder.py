@@ -1,25 +1,7 @@
-from datetime import datetime
 from typing import Optional
-
-from loguru import logger
-
+from transformers import AutoModelForSequenceClassification
 from model_class.model_interface import ModelWorker
 from preprocess.raw_data_preprocess.preprocess import build_dataset
-from settings import LogDir, LogVar
-
-from utils.log_helper import get_log_name
-
-logger.add(
-    get_log_name(LogDir.model, datetime.now()),
-    level=LogVar.level,
-    format=LogVar.format,
-    enqueue=LogVar.enqueue,
-    diagnose=LogVar.diagnose,
-    catch=LogVar.catch,
-    serialize=LogVar.serialize,
-    backtrace=LogVar.backtrace,
-    colorize=LogVar.color
-)
 
 
 class BertModelWorker(ModelWorker):
@@ -40,48 +22,22 @@ class BertModelWorker(ModelWorker):
         self.model = self.initialize_model()
 
     def initialize_model(self):
-        logger.debug('building model ...')
         if self.n_labels:
             model = self.create_model_class(self.n_labels)
             model.config.problem_type = "multi_label_classification"
-            # logger.debug(f"{model.config}")
             return model
 
         else:
             err_msg = f"number of labels is missing"
-            logger.error(err_msg)
             raise ValueError(err_msg)
 
     def create_model_class(self, num_labels):
-        ckpt = self.model_ckpt
-        if ckpt == 'bert-base-uncased':
-            from transformers import BertForSequenceClassification
-            model = BertForSequenceClassification.from_pretrained(
-                ckpt, num_labels=num_labels
+        try:
+            model = AutoModelForSequenceClassification.from_pretrained(
+                self.model_ckpt, num_labels=num_labels
             )
-        elif ckpt == 'xlnet-base-cased':
-            from transformers import XLNetForSequenceClassification
-            model = XLNetForSequenceClassification.from_pretrained(
-                ckpt, num_labels=num_labels
-            )
-        elif ckpt == 'roberta-base':
-            from transformers import RobertaForSequenceClassification
-            model = RobertaForSequenceClassification.from_pretrained(
-                ckpt, num_labels=num_labels)
-        elif ckpt == 'albert-base-v2':
-            from transformers import AlbertForSequenceClassification
-            model = AlbertForSequenceClassification.from_pretrained(
-                ckpt, num_labels=num_labels
-            )
-        elif ckpt == 'xlm-roberta-base':
-            from transformers import XLMRobertaForSequenceClassification
-            model = XLMRobertaForSequenceClassification.from_pretrained(
-                ckpt, num_labels=num_labels
-            )
-        else:
-            error_message = f"model info {ckpt} is not fount"
-            logger.error(error_message)
-            raise ValueError(error_message)
+        except Exception as e:
+            raise ValueError(e)
 
         return model
 

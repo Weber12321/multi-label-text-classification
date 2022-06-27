@@ -1,33 +1,23 @@
-from datetime import datetime
+import os
 from typing import Union
 
+import pandas as pd
 from datasets import load_dataset
 from loguru import logger
+from sklearn.model_selection import train_test_split
 
-from settings import LogDir, LogVar
+from definition import DATA_DIR
+from metrics.nultilabel_metrics import label_transform
 from tokenizers_class.tokenize import build_tokenizer
 from utils.enum_helper import DatasetName
-from utils.log_helper import get_log_name
 from utils.preprocess_helper import custom_train_test_split, get_data_sample
 from workers.datasets_builder.loader import create_data_loader
-
-logger.add(
-    get_log_name(LogDir.preprocess, datetime.now()),
-    level=LogVar.level,
-    format=LogVar.format,
-    enqueue=LogVar.enqueue,
-    diagnose=LogVar.diagnose,
-    catch=LogVar.catch,
-    serialize=LogVar.serialize,
-    backtrace=LogVar.backtrace,
-    colorize=LogVar.color
-)
 
 
 def build_dataset(
         dataset_name: str, token_name: str,
         batch_size: int, max_len: int,
-        n_sample: Union[int, str],
+        n_sample: Union[int, str] = None,
         train_val_split_rate: float = 0.8,
         version: str = 'small'
 ):
@@ -40,7 +30,6 @@ def build_dataset(
     :param max_len: max length of training and validating.
     :param n_sample: sampling size
     :param train_val_split_rate: split rate of training and validating.
-    :param kwargs:
     :return: training, validating DataLoader and n_labels
     """
 
@@ -88,17 +77,45 @@ def build_dataset(
             df_sample, logger, rate=train_val_split_rate
         )
         tokenizer = build_tokenizer(
-            token_name=token_name, log=logger
+            token_name=token_name
         )
         logger.info('building loader...')
         train_loader = create_data_loader(
-            df_train, dataset_name, tokenizer, max_len, batch_size
+            df_train, tokenizer, max_len, batch_size
         )
         test_loader = create_data_loader(
-            df_test, dataset_name, tokenizer, max_len, batch_size
+            df_test, tokenizer, max_len, batch_size
         )
 
         return train_loader, test_loader, len(label_cols)
+
+    elif dataset_name == DatasetName.audience_tiny.value:
+        data_path = os.path.join(DATA_DIR / "au_450.json")
+        df = pd.read_json(data_path)
+        logger.debug(df.head())
+
+        label_col = ['男性', '女性', '已婚', '未婚', '上班族', '學生', '青年', '有子女']
+        num_idx = list(range(0, 8))
+        label_col_dict = dict(zip(label_col, num_idx))
+
+        df = label_transform(df, label_col_dict, target='label')
+        df[label_col] = pd.DataFrame(df.labels.tolist(), index=df.index)
+
+        logger.debug(f"max sentence length: {df.text.str.split().str.len().max()}")
+        logger.debug(f"average sentence length: {df.text.str.split().str.len().mean()}")
+        logger.debug(f"stdev sentence length: {df.text.str.split().str.len().std()}")
+
+        logger.debug(f"label counting")
+        logger.debug(df[label_col].eq(1).sum())
+        df_train, df_test = train_test_split(df, test_size=1-train_val_split_rate)
+
+        tokenizer = build_tokenizer(token_name=token_name)
+
+        train_loader = create_data_loader(df_train, tokenizer, max_len, batch_size)
+        test_loader = create_data_loader(df_test, tokenizer, max_len, batch_size)
+
+        return train_loader, test_loader, len(label_col)
+
     else:
         error_message = f"dataset {dataset_name} is not found"
         logger.error(error_message)

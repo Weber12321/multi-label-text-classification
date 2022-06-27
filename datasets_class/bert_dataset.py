@@ -3,7 +3,7 @@ import torch
 from torch.utils.data import Dataset
 
 
-class GoEmotionDataset(Dataset):
+class BertDataset(Dataset):
     def __init__(self, reviews, targets, tokenizer, max_len):
         self.reviews = reviews
         self.targets = targets

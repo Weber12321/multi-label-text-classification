@@ -8,15 +8,18 @@ class TrainingStatus(str, Enum):
 
 
 class ModelName(str, Enum):
-    bert_base = "bert_base"
-    XLNet = "XLNet"
-    roberta = "roberta"
-    albert = "albert"
-    XLM_roberta = "XLM_roberta"
+    albert = "albert-base-v2"
+    bert_base = "bert-base-uncased"
+    bert_chinese = "bert-base-chinese"
+    chinese_bert_wwm_ext = "hfl/chinese-bert-wwm-ext"
+    chinese_macbert_base = "hfl/chinese-macbert-base"
+    chinese_roberta_wwm_ext = "hfl/chinese-roberta-wwm-ext"
+    xlm_roberta = "xlm-roberta-base"
 
 
 class DatasetName(str, Enum):
     go_emotion = "go_emotion"
+    audience_tiny = "audience_tiny"
 
 
 class DatabaseSelection(str, Enum):
