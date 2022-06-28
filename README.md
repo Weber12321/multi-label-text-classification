@@ -258,6 +258,7 @@ See `wandb` to track each run's details: [Audience_bert](https://wandb.ai/weber1
 | **hfl/chinese-macbert-base**    | 50    | 64    | 2e-5          | 30      | **79.4**     | AT      |           |
 | **hfl/chinese-roberta-wwm-ext** | 50    | 64    | 2e-5          | 30      | **79.7**     | AT      |           |
 | bert-base-chinese               | 50    | 64    | 2e-5          | 30      | 88.1         | AS*     |           |
-| bert-base-chinese               | 50    | 32    | 2e-5          | 64      | 92           | AS*     |           |
+| bert-base-chinese               | 50    | 32    | 2e-5          | 64      | 92.0         | AS*     |           |
 | bert-base-chinese               | 50    | 32    | 2e-5          | 64      | 90.2         | AS*     | 5-fold CV |
-|                                 |       |       |               |         |              |         |           |
+| hfl/chinese-roberta-wwm-ext     | 50    | 32    | 2e-5          | 64      | 92.0         | AS*     |           |
+| hfl/chinese-roberta-wwm-ext     | 50    | 32    | 2e-5          | 100     | 94.0         | AS*     |           |
