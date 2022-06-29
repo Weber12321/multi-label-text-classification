@@ -203,11 +203,15 @@ We use the [transformers](https://huggingface.co/docs/transformers/index) models
 | go_emotions   | raw dataset without any preprocess, only remove the duplicated row based on text | 57732  |
 | go_emotions_s | small dataset with size 1000 rows sampling                   | 1000   |
 | *             | only extract top 8 occurrence of label classes (original size of label classes is 28) | -      |
-| AT            | `audience tiny` dataset annotated by auto-annotation flow and validated with doccano | 450    |
-| AS            | `audience small` dataset annotated by auto-annotation flow and validated with doccano | 1200   |
-| *             | in audience datasets, only select four classes (male, female, married and unmarried) | -      |
 
-
++ audience
+  + dataset with "**star sign**" means it only contains partial classess.
+| Name | Description                                                  | length |
+| ---- | ------------------------------------------------------------ | ------ |
+| AT   | `audience tiny` dataset annotated by auto-annotation flow and validated with doccano | 450    |
+| AS1  | `audience small` dataset annotated by auto-annotation flow and validated with doccano with nearly 550 data for each class | 1200   |
+| AS2  | `audience small` dataset annotated by auto-annotation flow and validated with doccano with nearly 1000 data for each class | 2234   |
+| *    | in audience datasets, only select four classes (<u>male, female, married and unmarried</u>) | -      |
 
 ###### Baseline
 
@@ -247,18 +251,19 @@ We use the [transformers](https://huggingface.co/docs/transformers/index) models
 
 See `wandb` to track each run's details: [Audience_bert](https://wandb.ai/weber12321/audience_bert?workspace=user-weber12321)
 
-| model                           | epoch | batch | learning rate | max_len | f1 score (%) | dataset | Notes     |
-| ------------------------------- | ----- | ----- | ------------- | ------- | ------------ | ------- | --------- |
-| bert-base-uncased               | 50    | 64    | 2e-5          | 30      | 54           | AT      |           |
-| bert-base-chinese               | 50    | 64    | 2e-5          | 30      | 79.1         | AT      |           |
-| albert-base-v2                  | 50    | 64    | 2e-5          | 30      | 31           | AT      |           |
-| roberta-base                    | 50    | 64    | 2e-5          | 30      | 46           | AT      |           |
-| xlm-roberta-base                | 50    | 64    | 2e-5          | 30      | 78.7         | AT      |           |
-| **hfl/chinese-bert-wwm-ext**    | 50    | 64    | 2e-5          | 30      | **79.1**     | AT      |           |
-| **hfl/chinese-macbert-base**    | 50    | 64    | 2e-5          | 30      | **79.4**     | AT      |           |
-| **hfl/chinese-roberta-wwm-ext** | 50    | 64    | 2e-5          | 30      | **79.7**     | AT      |           |
-| bert-base-chinese               | 50    | 64    | 2e-5          | 30      | 88.1         | AS*     |           |
-| bert-base-chinese               | 50    | 32    | 2e-5          | 64      | 92.0         | AS*     |           |
-| bert-base-chinese               | 50    | 32    | 2e-5          | 64      | 90.2         | AS*     | 5-fold CV |
-| hfl/chinese-roberta-wwm-ext     | 50    | 32    | 2e-5          | 64      | 92.0         | AS*     |           |
-| hfl/chinese-roberta-wwm-ext     | 50    | 32    | 2e-5          | 100     | 94.0         | AS*     |           |
+| model                           | epoch | batch | learning rate | max_len | f1 score (%) | dataset | Notes               |
+| ------------------------------- | ----- | ----- | ------------- | ------- | ------------ | ------- | ------------------- |
+| bert-base-uncased               | 50    | 64    | 2e-5          | 30      | 54           | AT      |                     |
+| bert-base-chinese               | 50    | 64    | 2e-5          | 30      | 79.1         | AT      |                     |
+| albert-base-v2                  | 50    | 64    | 2e-5          | 30      | 31           | AT      |                     |
+| roberta-base                    | 50    | 64    | 2e-5          | 30      | 46           | AT      |                     |
+| xlm-roberta-base                | 50    | 64    | 2e-5          | 30      | 78.7         | AT      |                     |
+| **hfl/chinese-bert-wwm-ext**    | 50    | 64    | 2e-5          | 30      | **79.1**     | AT      |                     |
+| **hfl/chinese-macbert-base**    | 50    | 64    | 2e-5          | 30      | **79.4**     | AT      |                     |
+| **hfl/chinese-roberta-wwm-ext** | 50    | 64    | 2e-5          | 30      | **79.7**     | AT      |                     |
+| bert-base-chinese               | 50    | 64    | 2e-5          | 30      | 88.1         | AS1*    |                     |
+| bert-base-chinese               | 50    | 32    | 2e-5          | 64      | 92.0         | AS1*    |                     |
+| bert-base-chinese               | 50    | 32    | 2e-5          | 64      | 90.2         | AS1*    | 5-fold<br />mean f1 |
+| hfl/chinese-roberta-wwm-ext     | 50    | 32    | 2e-5          | 64      | 92.0         | AS1*    |                     |
+| **hfl/chinese-roberta-wwm-ext** | 50    | 32    | 2e-5          | 100     | **94.0**     | AS1*    |                     |
+| hfl/chinese-roberta-wwm-ext     | 50    | 32    | 2e-5          | 100     | 95.1         | AS2*    |                     |
