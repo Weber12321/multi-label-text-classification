@@ -14,4 +14,8 @@ Path(MODEL_DIR).mkdir(exist_ok=True)
 SQL_DIR = Path(ROOT_DIR / "sql")
 Path(SQL_DIR).mkdir(exist_ok=True)
 
+FALSE_PRED = Path(ROOT_DIR / "false_pred")
+Path(FALSE_PRED).mkdir(exist_ok=True)
 
+REPORT = Path(ROOT_DIR / "reports")
+Path(REPORT).mkdir(exist_ok=True)

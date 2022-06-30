@@ -99,3 +99,9 @@ venv.bak/
 
 # anno data
 /data/auto_annotation_dir
+/data/annotated_data_dir
+
+# wandb log
+/wandb
+
+

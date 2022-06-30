@@ -28,6 +28,8 @@ Employee = "^0.0.4"
 Student = "^0.0.1"
 streamlit = "^1.10.0"
 wandb = "^0.12.19"
+stqdm = "^0.0.4"
+plotly = "^5.9.0"
 
 [tool.poetry.dev-dependencies]
 
