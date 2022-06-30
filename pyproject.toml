@@ -10,7 +10,6 @@ transformers = "^4.19.2"
 vaex = "^4.9.1"
 pandas = "^1.4.2"
 sklearn = "^0.0"
-torch = {url = "https://download.pytorch.org/whl/cpu/torch-1.11.0%2Bcpu-cp38-cp38-win_amd64.whl"}
 jupyter = "^1.0.0"
 loguru = "^0.6.0"
 datasets = "^2.2.2"
@@ -32,6 +31,7 @@ stqdm = "^0.0.4"
 plotly = "^5.9.0"
 
 [tool.poetry.dev-dependencies]
+torch = {url = "https://download.pytorch.org/whl/cpu/torch-1.11.0%2Bcpu-cp38-cp38-win_amd64.whl"}
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]
