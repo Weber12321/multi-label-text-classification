@@ -63,19 +63,19 @@ $ make run_celery
 $ make run_st
 ```
 
-##### Docker
+##### Docker (under dev)
 
 ```bash
-$ chmod +x start.sh
+#$ chmod +x start.sh
 
-$ docker build \
-	-t ychuang/multi-classification:v2 \
-	--no-cache .
+#$ docker build \
+#	-t ychuang/multi-classification:v2 \
+#	--no-cache .
 
-$ docker run \
-	-d -p 8501:8501 -p 8000:8000 \
-	--name ychuang-multilabel-test \
-	--env-file .env --gpus all ychuang/multi-classification:v2
+#$ docker run \
+#	-d -p 8501:8501 -p 8000:8000 \
+#	--name ychuang-multilabel-test \
+#	--env-file .env --gpus all ychuang/multi-classification:v2
 ```
 
 Access the experimental docs of swagger user interface and start the experiment by http://127.0.0.1:8000/docs
