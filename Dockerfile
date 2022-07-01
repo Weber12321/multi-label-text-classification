@@ -9,7 +9,10 @@ WORKDIR /
 COPY pyproject.toml poetry.lock
 SHELL ["/bin/bash", "-o", "pipefail", "-c"]
 
-RUN pip install --no-cache-dir pip==22.0.4 \
+RUN apt-get update \
+ && apt-get install -y --no-install-recommends \
+    curl \
+ && pip install --no-cache-dir pip==22.0.4 \
  && curl -sSL https://raw.githubusercontent.com/python-poetry/poetry/master/get-poetry.py | python - \
  && PATH="${PATH}:$HOME/.poetry/bin" \
  && poetry export --without-hashes -o /requirements.txt \
