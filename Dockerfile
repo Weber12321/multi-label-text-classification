@@ -7,7 +7,7 @@ ENV PYTHONUNBUFFERED 1
 
 WORKDIR /
 COPY pyproject.toml poetry.lock
-SHELL ["/bin/bash", "-o", "pipfail", "-c"]
+SHELL ["/bin/bash", "-o", "pipefail", "-c"]
 
 RUN pip install --no-cache-dir pip==22.0.4 \
  && curl -sSL https://raw.githubusercontent.com/python-poetry/poetry/master/get-poetry.py | python - \
