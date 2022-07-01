@@ -6,7 +6,7 @@ FROM python:${PYTHON_VERSION}
 ENV PYTHONUNBUFFERED 1
 
 WORKDIR /
-COPY pyproject.toml poetry.lock
+COPY /pyproject.toml /poetry.lock
 SHELL ["/bin/bash", "-o", "pipefail", "-c"]
 
 RUN apt-get update \
