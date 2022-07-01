@@ -28,6 +28,8 @@ This is a project for text multi-label text classification implementation.
 
 ### Usage
 
+##### Poetry
+
 Download and setup the environment:
 
 ```shell
@@ -41,18 +43,8 @@ Create a `.env` file
 + By default, the debug environment (`DEBUG=TRUE`) is using the sqlite database to store the training information, you can switch to other mysql or postgresql database. Try to modify the `settings.py` to change the configuration.
 
 ```bash
-#Basic configuration
-DEBUG=TRUE
-
-#Training device configuration
-DEVICE=cpu
-
-#DATABASE: using mysql
-USER=<user>
-PASSWORD=<password>
-HOST=<host>
-PORT=<port>
-SCHEMA=<schema>
+PYTHON_VERSION=3.8.10-slim-buster
+PYTORCH_VERSION=cu113/torch-1.11.0%2Bcu113-cp38-cp38-linux_x86_64.whl
 
 #Auto-annotating source database configuration
 A_USER=<user>
@@ -68,6 +60,22 @@ Run the service
 ```bash
 $ make run_api
 $ make run_celery
+$ make run_st
+```
+
+##### Docker
+
+```bash
+$ chmod +x start.sh
+
+$ docker build \
+	-t ychuang/multi-classification:v2 \
+	--no-cache .
+
+$ docker run \
+	-d -p 8501:8501 -p 8000:8000 \
+	--name ychuang-multilabel-test \
+	--env-file .env --gpus all ychuang/multi-classification:v2
 ```
 
 Access the experimental docs of swagger user interface and start the experiment by http://127.0.0.1:8000/docs
@@ -247,17 +255,24 @@ See `wandb` to track each run's details: [Audience_bert](https://wandb.ai/weber1
 
 + baseline: random forest (CH)
 
-| model                           | epoch | batch | learning rate | f1 score | dataset | model_size (MB) |
-| ------------------------------- | ----- | ----- | ------------- | -------- | ------- | --------------- |
-| baseline                        | -     | -     | -             | 0.08     | AT      | -               |
-| albert-base-v2                  | 100   | 64    | 2e-5          | 0.28     | AT      | 44.6            |
-| roberta-base                    | 100   | 64    | 2e-5          | 0.45     | AT      | 475.52          |
-| bert-base-uncased               | 100   | 64    | 2e-5          | 0.55     | AT      | 417.46          |
-| bert-base-chinese               | 100   | 64    | 2e-5          | 0.81     | AT      | 390.15          |
-| hfl/chinese-bert-wwm-ext        | 100   | 64    | 2e-5          | 0.81     | AT      | 390.15          |
-| **xlm-roberta-base**            | 100   | 64    | 2e-5          | **0.82** | AT      | 1060.68         |
-| **hfl/chinese-macbert-base**    | 100   | 64    | 2e-5          | **0.82** | AT      | 390.15          |
-| **hfl/chinese-roberta-wwm-ext** | 100   | 64    | 2e-5          | **0.83** | AT      | 390.15          |
+| model                           | epoch | batch | learning rate | max _len | f1 score | dataset | Notes |
+| ------------------------------- | ----- | ----- | ------------- | -------- | -------- | ------- | ----- |
+| baseline                        | -     | -     | -             |          | 0.08     | AT      |       |
+| albert-base-v2                  | 100   | 64    | 2e-5          | 30       | 0.28     | AT      |       |
+| roberta-base                    | 100   | 64    | 2e-5          | 30       | 0.45     | AT      |       |
+| bert-base-uncased               | 100   | 64    | 2e-5          | 30       | 0.55     | AT      |       |
+| bert-base-chinese               | 100   | 64    | 2e-5          | 30       | 0.81     | AT      |       |
+| hfl/chinese-bert-wwm-ext        | 100   | 64    | 2e-5          | 30       | 0.81     | AT      |       |
+| **xlm-roberta-base**            | 100   | 64    | 2e-5          | 30       | **0.82** | AT      |       |
+| **hfl/chinese-macbert-base**    | 100   | 64    | 2e-5          | 30       | **0.82** | AT      |       |
+| **hfl/chinese-roberta-wwm-ext** | 100   | 64    | 2e-5          | 30       | **0.83** | AT      |       |
+| bert-base-chinese               | 50    | 64    | 2e-5          | 30      | 88.1         | AS1*    |                     |
+| bert-base-chinese               | 50    | 32    | 2e-5          | 64      | 92.0         | AS1*    |                     |
+| bert-base-chinese               | 50    | 32    | 2e-5          | 64      | 90.2         | AS1*    | 5-fold<br />mean f1 |
+| hfl/chinese-roberta-wwm-ext     | 50    | 32    | 2e-5          | 64      | 92.0         | AS1*    |                     |
+| **hfl/chinese-roberta-wwm-ext** | 50    | 32    | 2e-5          | 100     | **94.0**     | AS1*    |                     |
+| hfl/chinese-roberta-wwm-ext     | 50    | 32    | 2e-5          | 100     | 95.1         | AS2*    |                     |
+
 
 + training fl score
 ![](graphs/training_f1.PNG)

@@ -22,11 +22,10 @@ RUN apt-get update \
  && poetry config virtualenvs.create false \
  && poetry install --no-dev --no-root \
  && poetry add psycopg2-binary \
+ && poetry add ${PYTORCH_VERSION} \
  && apt-get clean \
  && rm -rf /var/lib/apt/lists/*
 
 EXPOSE 8000 8501
 
 ENTRYPOINT ["./start.sh"]
-
-CMD ["${PYTORCH_VERSION}"]
