@@ -11,6 +11,10 @@ SHELL ["/bin/bash", "-o", "pipefail", "-c"]
 
 RUN apt-get update \
  && apt-get install -y --no-install-recommends \
+    netcat=1.* \
+    libpq-dev=11.* \
+    unixodbc-dev=2.* \
+    g++=4:* \
     curl \
  && pip install --no-cache-dir pip==22.0.4 \
  && curl -sSL https://raw.githubusercontent.com/python-poetry/poetry/master/get-poetry.py | python - \
@@ -21,7 +25,6 @@ RUN apt-get update \
  && apt-get clean \
  && rm -rf /var/lib/apt/lists/*
 
-RUN rm -rf /var/lib/apt/lists/*
 
 COPY . .
 EXPOSE 8000 8501
