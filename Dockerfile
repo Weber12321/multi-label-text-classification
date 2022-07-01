@@ -15,8 +15,11 @@ RUN apt-get update \
  && pip install --no-cache-dir pip==22.0.4 \
  && curl -sSL https://raw.githubusercontent.com/python-poetry/poetry/master/get-poetry.py | python - \
  && PATH="${PATH}:$HOME/.poetry/bin" \
- && poetry export --without-hashes -o /requirements.txt \
- && pip install --no-cache-dir -r /requirements.txt
+ && poetry config virtualenvs.create false \
+ && poetry install --no-dev --no-root \
+ && poetry add psycopg2-binary \
+ && apt-get clean \
+ && rm -rf /var/lib/apt/lists/*
 
 RUN rm -rf /var/lib/apt/lists/*
 
