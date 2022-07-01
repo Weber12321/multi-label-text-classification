@@ -27,19 +27,6 @@ celery_worker.conf.update(timezone=configuration.CELERY_TIMEZONE)
 celery_worker.conf.update(task_track_started=configuration.CELERY_TASK_TRACK_STARTED)
 celery_worker.conf.update(task_acks_late=configuration.CELERY_ACKS_LATE)
 
-logger.add(
-    get_log_name(LogDir.model, datetime.now()),
-    level=LogVar.level,
-    format=LogVar.format,
-    enqueue=LogVar.enqueue,
-    diagnose=LogVar.diagnose,
-    catch=LogVar.catch,
-    serialize=LogVar.serialize,
-    backtrace=LogVar.backtrace,
-    colorize=LogVar.color
-)
-
-
 @celery_worker.task(name=f'{configuration.CELERY_NAME}.trainer_training', ignore_result=True)
 def background_training(task_id, dataset_name, model_name, n_sample,
                         epoch, max_len, batch_size, split_rate, lr_rate, version):
@@ -58,6 +45,18 @@ def background_training(task_id, dataset_name, model_name, n_sample,
     :param version: special version of data preprocess, see the readme
     :return: None
     """
+
+    logger.add(
+        get_log_name(LogDir.model, datetime.now()),
+        level=LogVar.level,
+        format=LogVar.format,
+        enqueue=LogVar.enqueue,
+        diagnose=LogVar.diagnose,
+        catch=LogVar.catch,
+        serialize=LogVar.serialize,
+        backtrace=LogVar.backtrace,
+        colorize=LogVar.color
+    )
 
     engine = create_engine(DATABASE_URL)
     start_time = datetime.now()
@@ -151,6 +150,18 @@ def auto_annotation_flow(
     :param end: end date, it is used in batch processing in the sql query
     :return: None
     """
+
+    logger.add(
+        get_log_name(LogDir.model, datetime.now()),
+        level=LogVar.level,
+        format=LogVar.format,
+        enqueue=LogVar.enqueue,
+        diagnose=LogVar.diagnose,
+        catch=LogVar.catch,
+        serialize=LogVar.serialize,
+        backtrace=LogVar.backtrace,
+        colorize=LogVar.color
+    )
 
     if not start or not end:
         error_message = 'datetime params are missing'

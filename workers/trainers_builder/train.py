@@ -5,18 +5,6 @@ from transformers import TrainingArguments, Trainer
 from settings import LogDir, LogVar
 from utils.log_helper import get_log_name
 
-logger.add(
-    get_log_name(LogDir.model, datetime.now()),
-    level=LogVar.level,
-    format=LogVar.format,
-    enqueue=LogVar.enqueue,
-    diagnose=LogVar.diagnose,
-    catch=LogVar.catch,
-    serialize=LogVar.serialize,
-    backtrace=LogVar.backtrace,
-    colorize=LogVar.color
-)
-
 
 def setup_trainer(model, compute_metrics, tokenizer,
         train_dataset, test_dataset, epoch=3, batch_size=32, weight_decay=0.01):

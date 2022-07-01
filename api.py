@@ -19,17 +19,6 @@ from workers.dbs_builder.databases import TrainingTask
 
 configuration = APIConfig()
 
-logger.add(
-    get_log_name(LogDir.api, datetime.now()),
-    level=LogVar.level,
-    format=LogVar.format,
-    enqueue=LogVar.enqueue,
-    diagnose=LogVar.diagnose,
-    catch=LogVar.catch,
-    serialize=LogVar.serialize,
-    backtrace=LogVar.backtrace,
-    colorize=LogVar.color
-)
 
 description = """
 ### Multi-label training task 

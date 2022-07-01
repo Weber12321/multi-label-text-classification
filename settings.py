@@ -10,8 +10,7 @@ load_dotenv('.env')
 
 DEBUG: bool = True if os.getenv('DEBUG') else False
 
-DEVICE = torch.device(os.getenv('DEVICE'))
-
+DEVICE = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 
 # logs
 class LogDir:
@@ -89,12 +88,12 @@ MODEL_CLASS = {
 }
 
 # database config for saving training results
-if DEBUG:
-    DATABASE_URL = "sqlite:///training.db"
-else:
-    DATABASE_URL = f'mysql+pymysql://{os.getenv("USER")}:' \
-                   f'{os.getenv("PASSWORD")}@{os.getenv("HOST")}:' \
-                   f'{os.getenv("PORT")}/{os.getenv("SCHEMA")}?charset=utf8mb4'
+# if DEBUG:
+DATABASE_URL = "sqlite:///training.db"
+# else:
+#     DATABASE_URL = f'mysql+pymysql://{os.getenv("USER")}:' \
+#                    f'{os.getenv("PASSWORD")}@{os.getenv("HOST")}:' \
+#                    f'{os.getenv("PORT")}/{os.getenv("SCHEMA")}?charset=utf8mb4'
 
 
 # database config for scraping data
