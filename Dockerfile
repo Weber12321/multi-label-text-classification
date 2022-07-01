@@ -6,7 +6,7 @@ FROM python:${PYTHON_VERSION}
 ENV PYTHONUNBUFFERED 1
 
 WORKDIR /
-COPY pyproject.toml poetry.lock ./
+COPY pyproject.toml poetry.lock start.sh ./
 SHELL ["/bin/bash", "-o", "pipefail", "-c"]
 
 RUN apt-get update \
@@ -25,8 +25,8 @@ RUN apt-get update \
  && apt-get clean \
  && rm -rf /var/lib/apt/lists/*
 
-
-COPY . .
 EXPOSE 8000 8501
 
-CMD ['/start.sh', '${PYTORCH_VERSION}']
+ENTRYPOINT ["./start.sh"]
+
+CMD ["${PYTORCH_VERSION}"]
