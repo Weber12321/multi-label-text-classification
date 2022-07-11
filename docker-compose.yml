@@ -10,12 +10,10 @@ services:
       - models:/model/torch_script
     environment:
       LEVEL: ${LEVEL}
-      REDIS: ${REDIS}
     links:
       - redis
     depends_on:
       - redis
-
 
   redis:
     image: redis:latest
