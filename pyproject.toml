@@ -1,31 +1,22 @@
 [tool.poetry]
-name = "scientificproject"
+name = "bert_celery"
 version = "0.1.0"
 description = ""
 authors = ["Weber <ychuang@eland.com.tw>"]
 
 [tool.poetry.dependencies]
 python = "^3.8"
-transformers = "^4.19.2"
-vaex = "^4.9.1"
-pandas = "^1.4.2"
+celery = {extras = ["redis"], version = "^5.2.7"}
+pandas = "^1.4.3"
 sklearn = "^0.0"
-torch = {url = "https://download.pytorch.org/whl/cpu/torch-1.11.0%2Bcpu-cp38-cp38-win_amd64.whl"}
-jupyter = "^1.0.0"
 loguru = "^0.6.0"
-datasets = "^2.2.2"
-loghandler = "^0.5.0"
-fastapi = "^0.78.0"
-uvicorn = {extras = ["standard"], version = "^0.17.6"}
-celery = "^5.2.6"
-sqlmodel = "^0.0.6"
-gevent = "^21.12.0"
-redis = "^4.3.1"
-best = "^2.0.4"
+transformers = "^4.20.1"
 sentencepiece = "^0.1.96"
-tensorboard = "^2.9.1"
-Employee = "^0.0.4"
-Student = "^0.0.1"
+torch = [
+    {url = "https://download.pytorch.org/whl/cpu/torch-1.11.0%2Bcpu-cp38-cp38-win_amd64.whl", markers = "sys_platform == 'win32'"},
+    {url = "https://download.pytorch.org/whl/cu113/torch-1.11.0%2Bcu113-cp38-cp38-linux_x86_64.whl", markers = "sys_platform == 'linux'"}
+]
+tritonclient = {extras = ["all"], version = "^2.23.0"}
 
 [tool.poetry.dev-dependencies]
 

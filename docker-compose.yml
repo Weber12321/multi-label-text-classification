@@ -1,0 +1,42 @@
+version: "3"
+
+services:
+  celery_server:
+    env_file: .env
+    build:
+      context: .
+      dockerfile: Dockerfile
+    volumes:
+      - models:/model/torch_script
+    environment:
+      LEVEL: ${LEVEL}
+      REDIS: ${REDIS}
+    links:
+      - redis
+    depends_on:
+      - redis
+
+
+  redis:
+    image: redis:latest
+    hostname: redis
+    ports:
+      - 6379:6379
+
+  triton_server:
+    image: nvcr.io/nvidia/tritonserver:22.06-py3
+    hostname: triton
+    ports:
+      - 8000:8000
+      - 8001:8001
+      - 8002:8002
+    command: ["tritonserver", "--model-store=/models", "--model-control-mode=poll", --repository-poll-secs=15]
+    volumes:
+      - models:/models
+    shm_size: 1g
+    ulimits:
+      memlock: -1
+      stack: 67108864
+
+volumes:
+  models:

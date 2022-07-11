@@ -1,0 +1,22 @@
+name: "audience_bert"
+platform: "pytorch_libtorch"
+max_batch_size: 64
+input [
+    {
+        name: "input__0"
+        data_type: TYPE_INT64
+        dims: [1, 512]
+    },
+    {
+       name: "input__1"
+       data_type: TYPE_INT64
+       dims: [1, 512]
+    }
+]
+output [
+    {
+        name: "output__0"
+        data_type: TYPE_FP32
+        dims: [1, 4]
+    }
+]
