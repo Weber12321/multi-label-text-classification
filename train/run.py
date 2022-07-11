@@ -69,8 +69,8 @@ def run(
     train_loader = create_data_loader(df_train, tokenizer, max_len, batch_size)
     test_loader = create_data_loader(df_test, tokenizer, max_len, batch_size)
 
-    save_model_token = Path(os.path.join(MODEL_DIR / f"tokenizer/{version}/"))
-    Path(save_model_token).mkdir(exist_ok=True)
+    save_model_token = Path(os.path.join(TOKEN_DIR / f"{version}/"))
+    save_model_token.mkdir(exist_ok=True)
     tokenizer.save_pretrained(save_model_token)
 
     optimizer = AdamW(model.parameters(), lr=learning_rate, correct_bias=False)
@@ -166,8 +166,8 @@ def run(
         device,
         label_col
     )
-    save_model_directory = Path(os.path.join(MODEL_DIR / f"torch_script/audience_bert/{version}"))
-    Path(save_model_directory).mkdir(exist_ok=True)
+    save_model_directory = Path(os.path.join(AUDIENCE_BERT_DIR / f"{version}"))
+    save_model_directory.mkdir(exist_ok=True)
     save_model_pt_path = os.path.join(save_model_directory / f"model.pt")
 
     save_pt(

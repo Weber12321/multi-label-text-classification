@@ -17,3 +17,13 @@ Path(MODEL_BIN_DIR).mkdir(exist_ok=True)
 
 MODEL_FP_DIR = Path(MODEL_DIR / 'false_pred')
 Path(MODEL_FP_DIR).mkdir(exist_ok=True)
+
+TOKEN_DIR = Path(MODEL_DIR / "tokenizer")
+Path(TOKEN_DIR).mkdir(exist_ok=True)
+
+MODEL_PT_DIR = Path(MODEL_DIR / "torch_script")
+Path(MODEL_PT_DIR).mkdir(exist_ok=True)
+
+AUDIENCE_BERT_DIR = Path(MODEL_FP_DIR / "audience_bert")
+Path(AUDIENCE_BERT_DIR).mkdir(exist_ok=True)
+
