@@ -1,11 +1,12 @@
 import json
 import os.path
+from pathlib import Path
 
 import numpy as np
 import pandas as pd
 from sklearn.model_selection import train_test_split
 
-from config.definition import DATA_DIR
+from config.definition import DATA_DIR, MODEL_PT_DIR
 
 
 def sigmoid_logits_to_one_hot(arr: np.array, thresh=0.5):
@@ -54,3 +55,7 @@ def load_dataset(file_name, label_file_name, test_size=0.2, random_state=42):
     return df_train, df_test, labels
 
 
+def create_model_dir(model_name: str):
+    AUDIENCE_BERT_DIR = Path(MODEL_PT_DIR / model_name)
+    Path(AUDIENCE_BERT_DIR).mkdir(exist_ok=True)
+    return AUDIENCE_BERT_DIR

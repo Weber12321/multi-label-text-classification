@@ -14,7 +14,7 @@ from train.evaluate_flow import eval_epoch
 from train.predict_flow import get_classification_report, save_pt, get_model_size
 from train.train_flow import train_epoch
 from utils.log_helper import create_logger
-from utils.train_helper import get_dummy_input
+from utils.train_helper import get_dummy_input, create_model_dir
 
 logger_handler = create_logger(LogDir.training)
 
@@ -24,6 +24,7 @@ def run(
         df_train,
         df_test,
         label_col,
+        model_name,
         version,
         learning_rate=2e-5,
         epochs=50,
@@ -96,6 +97,8 @@ def run(
     best_acc = 0
     best_epoch = 0
 
+    MODEL_PT_MODEL_NAME_DIR = create_model_dir(model_name)
+
     save_model_path = os.path.join(MODEL_BIN_DIR / f"{display_name.split('/')[-1]}_{dsn}.bin")
     false_pred_path = os.path.join(MODEL_FP_DIR / f"{display_name.split('/')[-1]}_{dsn}.csv")
     # wandb.watch(model, log="all")
@@ -166,7 +169,7 @@ def run(
         device,
         label_col
     )
-    save_model_directory = Path(os.path.join(AUDIENCE_BERT_DIR / f"{version}"))
+    save_model_directory = Path(os.path.join(MODEL_PT_MODEL_NAME_DIR / f"{version}"))
     save_model_directory.mkdir(exist_ok=True)
     save_model_pt_path = os.path.join(save_model_directory / f"model.pt")
 
