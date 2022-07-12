@@ -27,3 +27,5 @@ Path(MODEL_PT_DIR).mkdir(exist_ok=True)
 AUDIENCE_BERT_DIR = Path(MODEL_PT_DIR / "audience_bert")
 Path(AUDIENCE_BERT_DIR).mkdir(exist_ok=True)
 
+CONFIG_PBTXT_PATH = Path(ROOT_DIR, "config.pbtxt")
+

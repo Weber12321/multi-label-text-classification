@@ -6,8 +6,7 @@ from utils.train_helper import load_dataset
 
 app = Celery(
     name='bert_celery',
-    broker="redis://redis:6379/0",
-    backend="redis://redis:6379/0"
+    broker="redis://redis:6379"
 )
 
 app.conf.task_routes = {
