@@ -24,6 +24,6 @@ Path(TOKEN_DIR).mkdir(exist_ok=True)
 MODEL_PT_DIR = Path(MODEL_DIR / "torch_script")
 Path(MODEL_PT_DIR).mkdir(exist_ok=True)
 
-AUDIENCE_BERT_DIR = Path(MODEL_FP_DIR / "audience_bert")
+AUDIENCE_BERT_DIR = Path(MODEL_PT_DIR / "audience_bert")
 Path(AUDIENCE_BERT_DIR).mkdir(exist_ok=True)
 
