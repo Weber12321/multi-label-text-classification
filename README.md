@@ -8,6 +8,10 @@ This repo is refer to [triton-inference-server](https://github.com/triton-infere
 
 Noted that this repo doesn't contain client code, you can refer to [triton-inference-server client docs](https://github.com/triton-inference-server/client) to setup your client machine or using celery cluster to develop inference client, in this way you have to bind the same massage broker.
 
+## Work flow
+
+![](graph/Audience DL-model_service.png)
+
 ## Usage
 
 + Clone the repo
