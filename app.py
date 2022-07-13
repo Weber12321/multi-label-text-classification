@@ -6,12 +6,16 @@ from utils.train_helper import load_dataset
 
 app = Celery(
     name='bert_celery',
-    broker="redis://redis:6379"
+    broker="redis://redis:6379/0",
+    backend="redis://redis:6379/1"
 )
 
 app.conf.task_routes = {
     'A.*': {'queue': 'training_queue'},
 }
+
+app.conf.update(result_expires=1)
+app.conf.update(task_track_started=True)
 
 
 @app.task
