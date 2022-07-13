@@ -6,7 +6,13 @@
 
 This repo is refer to [triton-inference-server](https://github.com/triton-inference-server/server) for building a text classification training task using Pytorch, Transformers, celery and deploying the inference with Triton Inference Sever.
 
-Noted that this repo doesn't contain client code, you can refer to [triton-inference-server client docs](https://github.com/triton-inference-server/client) to setup your client machine or using celery cluster to develop inference client, in this way you have to bind the same massage broker.
+You can refer to [triton-inference-server client docs](https://github.com/triton-inference-server/client) to set up your client machine or using celery cluster to develop inference client, in this way you have to bind the same massage broker. 
+
+In this project, we created two celery task:    
+1. training task: 
+   + users can place the training dataset with training arguments to start the training flow, the result will be saved into the  `model_report` and `eval_report` table in `audience_result`
+2. predicting task:
+   + receive the inference request with dataset and arguments (these are fixed value in client side) and return the prediction label set
 
 ## Work flow
 

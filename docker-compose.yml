@@ -28,7 +28,7 @@ services:
       - 8000:8000
       - 8001:8001
       - 8002:8002
-    command: ["tritonserver", "--model-store=/models", "--model-control-mode=poll", --repository-poll-secs=15]
+    command: ["tritonserver", "--model-store=/models", "--model-control-mode=poll", --repository-poll-secs=30]
     volumes:
       - models:/models
     shm_size: 1g

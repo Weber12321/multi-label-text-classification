@@ -8,7 +8,7 @@ from config.definition import MODEL_DIR
 from data_set.data_loader import create_data_loader_pred
 
 
-input_name = ['input__0', 'input__1']
+input_name = ['input__0', 'input__2']
 output_name = 'output__0'
 
 

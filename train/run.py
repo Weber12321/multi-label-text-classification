@@ -97,7 +97,7 @@ def run(
     best_acc = 0
     best_epoch = 0
 
-    MODEL_PT_MODEL_NAME_DIR = create_model_dir(model_name)
+
 
     save_model_path = os.path.join(MODEL_BIN_DIR / f"{display_name.split('/')[-1]}_{dsn}.bin")
     false_pred_path = os.path.join(MODEL_FP_DIR / f"{display_name.split('/')[-1]}_{dsn}.csv")
@@ -169,6 +169,7 @@ def run(
         device,
         label_col
     )
+    MODEL_PT_MODEL_NAME_DIR = create_model_dir(model_name)
     save_model_directory = Path(os.path.join(MODEL_PT_MODEL_NAME_DIR / f"{version}"))
     save_model_directory.mkdir(exist_ok=True)
     save_model_pt_path = os.path.join(save_model_directory / f"model.pt")

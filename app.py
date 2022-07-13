@@ -45,3 +45,9 @@ def training(
     )
 
     return report, model_size, false_pred
+
+
+@app.task
+def predict(model_name, version, batch_size, max_len, dataset):
+    # todo: add inference function which take the dataset input and return the output labels
+    pass
