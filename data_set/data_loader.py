@@ -21,7 +21,25 @@ def create_data_loader(df, tokenizer, max_len, batch_size):
     )
 
 
-def     create_data_loader_pred(texts: np.array, tokenizer, max_len) -> List[dict]:
+def create_data_loader_from_dict(dict_data, tokenizer, max_len, batch_size):
+    ds = AudienceDataset(
+        ids=dict_data.get('id'),
+        reviews=dict_data.get('text'),
+        targets=dict_data.get('label'),
+        tokenizer=tokenizer,
+        max_len=max_len
+    )
+    return DataLoader(
+        ds,
+        batch_size=batch_size,
+        num_workers=0,
+        shuffle=True,
+    )
+
+
+
+
+def create_data_loader_pred(texts: np.array, tokenizer, max_len) -> List[dict]:
     outputs = []
     for text in texts:
         encoding = tokenizer.encode_plus(

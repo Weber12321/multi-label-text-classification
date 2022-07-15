@@ -12,7 +12,12 @@ input_name = ['input__0', 'input__2']
 output_name = 'output__0'
 
 
-def run_inference(version: int, dataset: List[str], max_len: int, batch_size: int):
+def run_inference(
+        model_name: str,
+        version: int,
+        dataset: List[str],
+        max_len: int,
+        batch_size: int = 32):
     # preprocess
     tokenizer = AutoTokenizer.from_pretrained(os.path.join(MODEL_DIR / f"tokenizer/{version}/"))
     pred_loader = create_data_loader_pred(dataset, tokenizer, max_len)

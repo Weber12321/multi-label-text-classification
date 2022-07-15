@@ -97,8 +97,6 @@ def run(
     best_acc = 0
     best_epoch = 0
 
-
-
     save_model_path = os.path.join(MODEL_BIN_DIR / f"{display_name.split('/')[-1]}_{dsn}.bin")
     false_pred_path = os.path.join(MODEL_FP_DIR / f"{display_name.split('/')[-1]}_{dsn}.csv")
     # wandb.watch(model, log="all")

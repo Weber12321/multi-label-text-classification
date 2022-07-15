@@ -7,7 +7,7 @@ from utils.train_helper import sigmoid_logits_to_one_hot, one_hot_to_label
 
 
 def get_classification_report(model, test_data_loader, path, device, label_col):
-    y_review_texts, y_pred, y_test = get_prediction(model, test_data_loader, path, device)
+    y_review_texts, y_pred, y_test, prob = get_prediction(model, test_data_loader, path, device)
     report = classification_report(y_test, y_pred, target_names=label_col, output_dict=True)
     report = pd.DataFrame(report).transpose()
     report = report.reset_index().rename(columns={'index': 'label'})
@@ -19,6 +19,7 @@ def get_classification_report(model, test_data_loader, path, device, label_col):
                     y_review_texts[i],
                     one_hot_to_label(y_test[i], label_col),
                     one_hot_to_label(y_pred[i], label_col)
+
                 ]
             )
     pd.set_option('display.float_format', lambda x: '%.3f' % x)
@@ -34,6 +35,7 @@ def get_prediction(model, data_loader, path, device):
     predictions = []
     # prediction_probability = []
     real_values = []
+
     with torch.no_grad():
         for d in data_loader:
             texts = d['review_text']
@@ -47,13 +49,13 @@ def get_prediction(model, data_loader, path, device):
             predictions.extend(logits.sigmoid())
             real_values.extend(targets)
 
-        y_pred = np.array([b.cpu().detach().numpy() for b in predictions])
+        prob = np.array([b.cpu().detach().numpy() for b in predictions])
         y_true = np.array([b.cpu().detach().numpy() for b in real_values])
 
-        y_pred = sigmoid_logits_to_one_hot(y_pred)
+        y_pred = sigmoid_logits_to_one_hot(prob)
         # predictions = torch.stack(predictions).cpu().detach()
         # real_values = torch.stack(real_values).cpu().detach()
-    return review_texts, y_pred, y_true
+    return review_texts, y_pred, y_true, prob
 
 
 # https://discuss.pytorch.org/t/finding-model-size/130275/2

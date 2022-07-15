@@ -7,7 +7,7 @@ import numpy as np
 import pandas as pd
 from sklearn.model_selection import train_test_split
 
-from config.definition import DATA_DIR, MODEL_PT_DIR, CONFIG_PBTXT_PATH
+from config.definition import DATA_DIR, MODEL_PT_DIR, CONFIG_PBTXT_PATH, TOKEN_DIR
 
 
 def sigmoid_logits_to_one_hot(arr: np.array, thresh=0.5):
@@ -21,6 +21,13 @@ def one_hot_to_label(arr, label_col):
     for i in range(len(arr)):
         if arr[i] == 1:
             temp.append(label_col[i])
+    return temp
+
+
+def prob_label_mapping(arr, label_col):
+    temp = []
+    for i in range(len(arr)):
+        temp.append({label_col[i]: arr[i]})
     return temp
 
 
@@ -68,3 +75,8 @@ def create_model_dir(model_name: str):
         )
 
     return AUDIENCE_BERT_DIR
+
+
+def create_tokenizer_dir(model_name: str):
+    AUDIENCE_BERT_DIR = Path(TOKEN_DIR / model_name)
+    Path(AUDIENCE_BERT_DIR).mkdir(exist_ok=True)
