@@ -3,10 +3,7 @@ from typing import Dict
 
 from celery import Celery
 
-from config.settings import TrainingFileName
-from train.run import run
-from utils.train_helper import load_dataset
-from worker.chinese_bert_classification import ChineseBertClassification
+from worker.train.chinese_bert_classification import ChineseBertClassification
 
 app = Celery(
     name='bert_celery',
@@ -80,5 +77,5 @@ def training(
 
 @app.task
 def predict(model_name, version, batch_size, max_len, dataset):
-    # todo: add inference function which take the dataset input and return the output labels
+    # todo: add inference function which take the dataset input and return the output label
     pass
