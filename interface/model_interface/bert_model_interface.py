@@ -1,7 +1,7 @@
 from abc import ABC, abstractmethod
 from typing import Iterable, Any
 
-from interface.model_interface import DeepModelInterface
+from interface.model_interface.model_interface import DeepModelInterface
 
 
 class BertModelInterface(DeepModelInterface, ABC):

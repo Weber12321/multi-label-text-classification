@@ -37,8 +37,6 @@ def create_data_loader_from_dict(dict_data, tokenizer, max_len, batch_size):
     )
 
 
-
-
 def create_data_loader_pred(texts: np.array, tokenizer, max_len) -> List[dict]:
     outputs = []
     for text in texts:

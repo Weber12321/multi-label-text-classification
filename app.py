@@ -3,6 +3,7 @@ from typing import Dict
 
 from celery import Celery
 
+from config.settings import MODEL_CKPT
 from worker.train.chinese_bert_classification import ChineseBertClassification
 
 app = Celery(
@@ -30,7 +31,7 @@ def training(
         batch_size=32,
         max_len=30,
         is_multi_label=1,
-        ckpt="hfl/chinese-bert-wwm-ext"
+        ckpt=MODEL_CKPT.get('chinese-bert-wwm')
 
 ):
     dataset = json.loads(dataset)

@@ -3,15 +3,16 @@ from collections import defaultdict
 from pathlib import Path
 from typing import Iterable, Any, Dict, List
 
+import torch
 from loguru import logger
 from tqdm.auto import tqdm
 from transformers import AutoTokenizer, AutoModelForSequenceClassification, \
     AdamW, get_scheduler
 from transformers import logging as hf_logging
 
-from config.definition import TOKEN_DIR, MODEL_BIN_DIR
+from config.definition import MODEL_BIN_DIR
 from data_set.data_loader import create_data_loader_from_dict
-from interface.bert_model_interface import BertModelInterface
+from interface.model_interface.bert_model_interface import BertModelInterface
 from train.evaluate_flow import eval_epoch
 from train.predict_flow import get_classification_report, save_pt, get_model_size
 from train.train_flow import train_epoch
@@ -47,7 +48,7 @@ class ChineseBertClassification(BertModelInterface):
 
     def preprocess(self):
         self.logger.debug(f"Creating tokenizer directory...")
-        create_tokenizer_dir(self.model_name)
+        MODEL_TOKEN_DIR = create_tokenizer_dir(self.model_name)
 
         self.logger.debug(f"Splitting datasets...")
         train_dataset, dev_dataset, test_dataset, dummy_input = dataset_split(self.dataset)
@@ -79,7 +80,7 @@ class ChineseBertClassification(BertModelInterface):
             self.test_loader = None
 
         self.logger.info('Saving tokenizer...')
-        save_model_token = Path(os.path.join(TOKEN_DIR / f"{self.model_version}/"))
+        save_model_token = Path(os.path.join(MODEL_TOKEN_DIR / f"{self.model_version}/"))
         save_model_token.mkdir(exist_ok=True)
         tokenizer.save_pretrained(save_model_token)
 

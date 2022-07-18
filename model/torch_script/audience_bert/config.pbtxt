@@ -5,12 +5,12 @@ input [
     {
         name: "input__0"
         data_type: TYPE_INT64
-        dims: [1, 512]
+        dims: [None, 100]
     },
     {
        name: "input__1"
        data_type: TYPE_INT64
-       dims: [1, 512]
+       dims: [None, 100]
     }
 ]
 output [

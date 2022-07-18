@@ -80,3 +80,5 @@ def create_model_dir(model_name: str):
 def create_tokenizer_dir(model_name: str):
     AUDIENCE_BERT_DIR = Path(TOKEN_DIR / model_name)
     Path(AUDIENCE_BERT_DIR).mkdir(exist_ok=True)
+
+    return AUDIENCE_BERT_DIR

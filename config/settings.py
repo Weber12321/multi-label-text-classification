@@ -10,6 +10,7 @@ REDIS = os.getenv('REDIS')
 
 class LogDir:
     training = 'training'
+    inference = 'inference'
 
 
 class LogVar:
@@ -27,3 +28,24 @@ class LogVar:
 class TrainingFileName:
     dataset = 'au_2234_p.json'
     labels = 'labels.json'
+
+
+MODEL_CKPT = {
+    'bert-chinese': 'bert-base-chinese',
+    'chinese-bert-wwm': 'hfl/chinese-bert-wwm-ext',
+    'chinese-roberta-wwm': 'hfl/chinese-roberta-wwm-ext'
+}
+
+# corresponds to the config.pbtxt inside the model-repo
+INFERENCE_TYPE = {
+    'pytorch': {
+        'bert': {
+            'input_name': [
+                'input__0', 'input__1'
+            ],
+            'output_name': 'output__0',
+        },
+    },
+}
+
+
