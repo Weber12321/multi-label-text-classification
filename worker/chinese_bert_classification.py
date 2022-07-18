@@ -9,21 +9,22 @@ from transformers import AutoTokenizer, AutoModelForSequenceClassification, \
     AdamW, get_scheduler
 from transformers import logging as hf_logging
 
-from config.definition import TOKEN_DIR
+from config.definition import TOKEN_DIR, MODEL_BIN_DIR
 from data_set.data_loader import create_data_loader_from_dict
 from interface.bert_model_interface import BertModelInterface
 from train.evaluate_flow import eval_epoch
+from train.predict_flow import get_classification_report, save_pt, get_model_size
 from train.train_flow import train_epoch
 from utils.enum_helper import DatasetType
-from utils.exception_helper import PreprocessError
-from utils.train_helper import create_tokenizer_dir, get_dummy_input
+from utils.exception_helper import PreprocessError, ModelNotFoundError
+from utils.train_helper import create_tokenizer_dir, get_dummy_input, create_model_dir
 
 
 class ChineseBertClassification(BertModelInterface):
     def __init__(self, max_len: int, ckpt: str, epochs: int, learning_rate: float,
                  batch_size: int, dataset: Iterable[Dict[str, str]],
                  label_col: List[str], model_name: str, model_version: int,
-                 optimizer: Any, do_lower_case=True, is_multi_label=True):
+                 optimizer: Any = None, do_lower_case=True, is_multi_label=1):
 
         super().__init__(ckpt, epochs, learning_rate, batch_size, dataset,
                          optimizer, max_len)
@@ -142,16 +143,94 @@ class ChineseBertClassification(BertModelInterface):
         )
 
     @logger.catch
-    def run(self):
+    def run(self) -> Dict[str, str]:
+
+        if not self.model:
+            raise ModelNotFoundError('Please init_model() before training model')
+
         hf_logging.set_verbosity_error()
         progress_bar = tqdm(range(self.epochs))
-        pass
 
+        self.logger.info(' **** Start training and validation flow **** ')
+        best_f1_score = 0
+        best_epoch = 0
 
+        save_model_path = os.path.join(MODEL_BIN_DIR / f"{self.display_name.split('/')[-1]}.bin")
+        # false_pred_path = os.path.join(MODEL_FP_DIR / f"{self.display_name.split('/')[-1]}.csv")
+
+        for epoch in range(1, self.epochs + 1):
+            self.logger.info('=' * 100)
+            self.logger.info(f"Epoch: {epoch} / {self.epochs}")
+            self.logger.info('-' * 100)
+
+            train_loss, train_acc, train_time = self.train()
+            self.logger.info(f"training loss {train_loss}; training time {train_time}")
+
+            val_loss, val_acc, val_time = self.evaluate()
+            self.logger.info(f"validation loss {val_loss}; validation time {val_time}")
+
+            self.logger.info(f"training acc {train_acc}; validation acc {val_acc}")
+
+            if val_acc['f1'] > best_f1_score:
+                best_f1_score = val_acc['f1']
+                best_epoch = epoch
+                torch.save(self.model.state_dict(), save_model_path)
+                self.logger.info(f"best f1_score is updated: {best_f1_score}")
+
+            progress_bar.update(1)
+
+        self.logger.info(' **** training is done !! **** ')
+        self.logger.info(f"Best epoch: {best_epoch}")
+        self.logger.info(f"Best validation f1_score: {best_f1_score}")
+
+        val_report, val_fp_df = get_classification_report(
+            self.model,
+            self.dev_loader,
+            save_model_path,
+            self.device,
+            self.label_col
+        )
+
+        if self.test_loader:
+            test_report, test_fp_df = get_classification_report(
+                self.model,
+                self.test_loader,
+                save_model_path,
+                self.device,
+                self.label_col
+            )
+        else:
+            test_report, test_fp_df = None, None
+
+        self.logger.info(f"Saving model to TorchScript ...")
+        MODEL_PT_MODEL_NAME_DIR = create_model_dir(self.model_name)
+        save_model_directory = Path(os.path.join(MODEL_PT_MODEL_NAME_DIR / f"{self.model_version}"))
+        save_model_directory.mkdir(exist_ok=True)
+        save_model_pt_path = os.path.join(save_model_directory / f"model.pt")
+
+        save_pt(self.model, self.dummy_input, save_model_path, save_model_pt_path)
+
+        model_size = get_model_size(self.model)
+        self.logger.info(model_size)
+
+        self.logger.info(val_report)
+        if test_report:
+            self.logger.info(test_report)
+
+            return {
+                'val_report': val_report.to_json(orient='records', force_ascii=False),
+                'val_fp_df': val_fp_df.to_json(orient='records', force_ascii=False),
+                'test_report': test_report.to_json(orient='records', force_ascii=False),
+                'test_fp_df': test_fp_df.to_json(orient='records', force_ascii=False),
+            }
+
+        return {
+            'val_report': val_report.to_json(orient='records', force_ascii=False),
+            'val_fp_df': val_fp_df.to_json(orient='records', force_ascii=False),
+        }
 
 
 def dataset_split(dataset: Iterable[Dict[str, str]]):
-
     train_dataset = defaultdict(list)
     dev_dataset = defaultdict(list)
     test_dataset = defaultdict(list)
@@ -173,5 +252,3 @@ def dataset_split(dataset: Iterable[Dict[str, str]]):
     dummy_input = max(train_dataset['text'])
 
     return train_dataset, dev_dataset, test_dataset, dummy_input
-
-

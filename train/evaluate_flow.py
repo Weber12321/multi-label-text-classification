@@ -8,7 +8,8 @@ from metrics.multilabel_classification import accuracy_thresh
 
 def eval_epoch(
         model, loader, device,
-        num_labels, loss_func=None
+        num_labels, loss_func=None,
+        average='macro', digits=3
 ):
 
     start = time()
@@ -48,6 +49,7 @@ def eval_epoch(
         y_pred=y_pred,
         y_true=y_true,
         thresh=0.5,
-        average="macro"
+        average=average,
+        digits=digits
     )
     return loss, acc, (time() - start) / 60

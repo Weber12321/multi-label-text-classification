@@ -1,8 +1,12 @@
+import json
+from typing import Dict
+
 from celery import Celery
 
 from config.settings import TrainingFileName
 from train.run import run
 from utils.train_helper import load_dataset
+from worker.chinese_bert_classification import ChineseBertClassification
 
 app = Celery(
     name='bert_celery',
@@ -22,33 +26,56 @@ app.conf.update(task_track_started=True)
 def training(
         model_name,
         version,
+        dataset,
+        label_col,
         learning_rate=2e-5,
         epochs=50,
         batch_size=32,
         max_len=30,
-        ckpt="hfl/chinese-bert-wwm-ext",
-        dsn="au_2234_p"
-):
-    df_train, df_test, label_col = load_dataset(
-        TrainingFileName.dataset, TrainingFileName.labels
-    )
+        is_multi_label=1,
+        ckpt="hfl/chinese-bert-wwm-ext"
 
-    report, model_size, false_pred = run(
-        df_train= df_train,
-        df_test= df_test,
+):
+    dataset = json.loads(dataset)
+    label_col = json.loads(label_col)
+
+    task_worker = ChineseBertClassification(
+        max_len=max_len,
+        ckpt=ckpt,
+        epochs=epochs,
+        learning_rate=learning_rate,
+        batch_size=batch_size,
+        dataset=dataset,
         label_col=label_col,
         model_name=model_name,
-        version=version,
-        learning_rate=learning_rate,
-        epochs=epochs,
-        batch_size=batch_size,
-        max_len=max_len,
-        num_labels=len(label_col),
-        ckpt=ckpt,
-        dsn=dsn
+        model_version=version,
+        is_multi_label=is_multi_label
     )
 
-    return report, model_size, false_pred
+    task_worker.init_model()
+    results: Dict[str, str] = task_worker.run()
+    return results
+
+    # df_train, df_test, label_col = load_dataset(
+    #     TrainingFileName.dataset, TrainingFileName.labels
+    # )
+    #
+    # report, model_size, false_pred = run(
+    #     df_train= df_train,
+    #     df_test= df_test,
+    #     label_col=label_col,
+    #     model_name=model_name,
+    #     version=version,
+    #     learning_rate=learning_rate,
+    #     epochs=epochs,
+    #     batch_size=batch_size,
+    #     max_len=max_len,
+    #     num_labels=len(label_col),
+    #     ckpt=ckpt,
+    #     dsn=dsn
+    # )
+    #
+    # return report, model_size, false_pred
 
 
 @app.task

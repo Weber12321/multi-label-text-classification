@@ -7,7 +7,8 @@ from metrics.multilabel_classification import accuracy_thresh
 
 def train_epoch(
         model, loader, optimizer, device,
-        num_labels, scheduler, loss_func=None
+        num_labels, scheduler, loss_func=None,
+        average='macro', digits=3
 ):
     start = time()
     model = model.train()
@@ -49,6 +50,8 @@ def train_epoch(
     acc = accuracy_thresh(
         y_pred=y_pred,
         y_true=y_true,
-        thresh=0.5
+        thresh=0.5,
+        average=average,
+        digits=digits
     )
     return loss, acc, (time() - start) / 60
