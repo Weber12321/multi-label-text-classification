@@ -3,27 +3,29 @@ from typing import Dict
 
 from celery import Celery
 
-from config.settings import MODEL_CKPT
+from config.settings import MODEL_CKPT, LogDir
+from utils.inference_helper import chunks
+from utils.log_helper import create_logger
 from worker.inference.bert_triton_inference import BertInferenceWorker
 from worker.train.chinese_bert_classification import ChineseBertClassification
 
 app = Celery(
     name='bert_celery',
-    broker="redis://redis:6379/0",
-    backend="redis://redis:6379/1"
+    broker="redis://localhost:6379/0",
+    backend="redis://localhost:6379/1"
 )
 
 app.conf.task_routes = {
-    'app.training': {'queue': 'training'},
-    'app.predict': {'queue': 'predict'},
+    'app.*': {'queue': 'deep_model'},
 }
 
 app.conf.update(result_expires=1)
 app.conf.update(task_track_started=True)
 
 
-@app.task(bind=True, queue='training', name='training')
+@app.task(bind=True, queue='deep_model', name='training')
 def training(
+        self,
         model_name,
         version,
         dataset,
@@ -78,19 +80,29 @@ def training(
     # return report, model_size, false_pred
 
 
-@app.task(bind=True, queue='predict', name='predict')
-def predict(model_name, version, max_len, dataset):
-    dataset = json.loads(dataset)
+@app.task(bind=True, queue='deep_model', name='predict')
+def predict(self, model_name, version, max_len, dataset):
+    logger = create_logger(LogDir.inference)
+    data = json.loads(dataset)
 
-    infer_worker = BertInferenceWorker(
-        dataset=dataset,
-        model_name=model_name,
-        model_version=version,
-        url='localhost:8001',
-        backend='pytorch',
-        max_len=max_len
-    )
+    output = []
+    for idx, chunk in enumerate(chunks(data, 32)):
+        logger.info(f" ==== batch: {idx} ==== ")
+        infer_worker = BertInferenceWorker(
+            dataset=chunk,
+            model_name=model_name,
+            model_version=version,
+            url='localhost:8000',
+            backend='pytorch',
+            max_len=max_len,
+            chunk_size=len(chunk)
+        )
+        results = infer_worker.run()
+        # print(results)
+        output.extend(results.tolist())
 
-    results = infer_worker.run()
+    assert len(output) == len(data)
 
-    return results
+    return json.dumps(output, ensure_ascii=False)
+
+

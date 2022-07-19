@@ -14,7 +14,7 @@ class InferenceInterface(ABC):
         self.model_version = str(model_version)
         self.dataset = dataset
         self.url = url
-        self.logger = self.logger = create_logger(LogDir.inference)
+        self.logger = create_logger(LogDir.inference)
 
     @abstractmethod
     def preprocess(self):

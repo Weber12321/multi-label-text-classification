@@ -47,4 +47,3 @@ class AudienceDataset(Dataset):
 
     def __len__(self):
         return len(self.reviews)
-

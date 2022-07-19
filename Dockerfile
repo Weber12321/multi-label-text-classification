@@ -24,4 +24,4 @@ RUN apt-get update \
  && apt-get clean \
  && rm -rf /var/lib/apt/lists/*
 
-CMD celery -A app worker -l INFO -P solo -Q training_queue
+CMD celery -A app worker -l INFO -P solo -Q training

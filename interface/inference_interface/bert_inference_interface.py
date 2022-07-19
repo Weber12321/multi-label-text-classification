@@ -3,7 +3,7 @@ from abc import ABC, abstractmethod
 from typing import List, Tuple
 
 import numpy as np
-import tritonclient.grpc as grpcclient
+import tritonclient.http as httpclient
 from transformers import AutoTokenizer
 
 from config.definition import TOKEN_DIR
@@ -21,6 +21,7 @@ class BertInferenceInterface(InferenceInterface, ABC):
             url: str,
             backend: str,
             max_len: int,
+            chunk_size: int,
             model_type: str = 'bert',
             verbose: bool = False
     ):
@@ -31,11 +32,12 @@ class BertInferenceInterface(InferenceInterface, ABC):
                                        f"set up in inference configuration")
         self.max_len = max_len
         self.backend = backend
+        self.chunk_size = chunk_size
         self.input_name = INFERENCE_TYPE[backend][model_type]['input_name']
         self.output_name = INFERENCE_TYPE[backend][model_type]['output_name']
         self.verbose = verbose
 
-    def preprocess(self) -> List[List[np.array, np.array]]:
+    def preprocess(self):
         token_path = os.path.join(TOKEN_DIR / self.model_name / self.model_version)
 
         try:
@@ -47,30 +49,37 @@ class BertInferenceInterface(InferenceInterface, ABC):
             raise ModelNotFoundError(f"Tokenizer files of model: {self.model_name} and "
                                      f"version: {self.model_version} are not found.")
 
-        raw_dataset = []
+        raw_input_ids = []
+        raw_input_att = []
         for data in self.dataset:
-            input_ids, attention_mask = tokenizer(
+            input_ids, attention_mask = tokenize(
                 data, tokenizer, max_len=self.max_len
             )
-            raw_dataset.append([input_ids, attention_mask])
+            # raw_dataset.append([input_ids, attention_mask])
+            raw_input_ids.append(input_ids)
+            raw_input_att.append(attention_mask)
 
-        return raw_dataset
+        return {
+            'input_ids': np.array(raw_input_ids),
+            'attention_mask': np.array(raw_input_att),
+        }
+        # return raw_dataset
 
     def init_service(self):
-        triton_client = grpcclient.InferenceServerClient(
+        triton_client = httpclient.InferenceServerClient(
             url=self.url, verbose=self.verbose
         )
         inputs = []
         outputs = []
 
-        inputs.append(grpcclient.InferInput(
+        inputs.append(httpclient.InferInput(
             self.input_name[0],
-            [1, self.max_len],
+            [self.chunk_size, self.max_len],
             'INT64'
         ))
-        inputs.append(grpcclient.InferInput(
+        inputs.append(httpclient.InferInput(
             self.input_name[1],
-            [1, self.max_len],
+            [self.chunk_size, self.max_len],
             'INT64'
         ))
 
