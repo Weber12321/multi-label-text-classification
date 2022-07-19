@@ -4,6 +4,7 @@ from typing import Dict
 from celery import Celery
 
 from config.settings import MODEL_CKPT
+from worker.inference.bert_triton_inference import BertInferenceWorker
 from worker.train.chinese_bert_classification import ChineseBertClassification
 
 app = Celery(
@@ -78,5 +79,17 @@ def training(
 
 @app.task
 def predict(model_name, version, batch_size, max_len, dataset):
-    # todo: add inference function which take the dataset input and return the output label
-    pass
+    dataset = json.loads(dataset)
+
+    infer_worker = BertInferenceWorker(
+        dataset=dataset,
+        model_name=model_name,
+        model_version=version,
+        url='localhost:8001',
+        backend='pytorch',
+        max_len=30
+    )
+
+    results = infer_worker.run()
+
+    return results

@@ -12,7 +12,7 @@ class BertInferenceWorker(BertInferenceInterface):
     def __init__(
             self, dataset: List[str], model_name: str,
             model_version: int, url: str, backend: str,
-            max_len: int, label_cols: List[str]):
+            max_len: int, label_cols: List[str] = None):
         super().__init__(
             dataset, model_name, model_version, url, backend, max_len
         )
