@@ -5,7 +5,7 @@ services:
     env_file: .env
     build:
       context: .
-      dockerfile: ${DOCKER}
+      dockerfile: Dockerfile
     volumes:
       - models:/model/torch_script
     environment:

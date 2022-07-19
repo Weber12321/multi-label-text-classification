@@ -11,8 +11,8 @@ from worker.train.chinese_bert_classification import ChineseBertClassification
 
 app = Celery(
     name='bert_celery',
-    broker="redis://localhost:6379/0",
-    backend="redis://localhost:6379/1"
+    broker="redis://redis:6379/0",
+    backend="redis://redis:6379/1"
 )
 
 app.conf.task_routes = {
@@ -92,7 +92,7 @@ def predict(self, model_name, version, max_len, dataset):
             dataset=chunk,
             model_name=model_name,
             model_version=version,
-            url='localhost:8000',
+            url='triton:8000',
             backend='pytorch',
             max_len=max_len,
             chunk_size=len(chunk)
