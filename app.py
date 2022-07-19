@@ -14,14 +14,15 @@ app = Celery(
 )
 
 app.conf.task_routes = {
-    'A.*': {'queue': 'training_queue'},
+    'app.training': {'queue': 'training'},
+    'app.predict': {'queue': 'predict'},
 }
 
 app.conf.update(result_expires=1)
 app.conf.update(task_track_started=True)
 
 
-@app.task
+@app.task(bind=True, queue='training', name='training')
 def training(
         model_name,
         version,
@@ -77,8 +78,8 @@ def training(
     # return report, model_size, false_pred
 
 
-@app.task
-def predict(model_name, version, batch_size, max_len, dataset):
+@app.task(bind=True, queue='predict', name='predict')
+def predict(model_name, version, max_len, dataset):
     dataset = json.loads(dataset)
 
     infer_worker = BertInferenceWorker(
@@ -87,7 +88,7 @@ def predict(model_name, version, batch_size, max_len, dataset):
         model_version=version,
         url='localhost:8001',
         backend='pytorch',
-        max_len=30
+        max_len=max_len
     )
 
     results = infer_worker.run()
