@@ -5,6 +5,7 @@ from loguru import logger
 import tritonclient.grpc as grpcclient
 
 from interface.inference_interface.bert_inference_interface import BertInferenceInterface
+from utils.train_helper import sigmoid_logits_to_one_hot
 
 
 class BertInferenceWorker(BertInferenceInterface):
@@ -25,6 +26,7 @@ class BertInferenceWorker(BertInferenceInterface):
         self.logger.info('Initializing connection ...')
         triton_client, inputs, outputs = self.init_service()
 
+        results = []
         for data in input_dataset:
             inputs[0].set_data_from_numpy(data[0])
             inputs[1].set_data_from_numpy(data[1])
@@ -41,16 +43,19 @@ class BertInferenceWorker(BertInferenceInterface):
             logits = response.as_numpy(self.output_name)
             logits = np.asarray(logits, dtype=np.float32)
 
+            sigmoid_vectorization = np.vectorize(self.sigmoid)
+
+            sig_logits = sigmoid_vectorization(logits)
+
+            results.append(sigmoid_logits_to_one_hot(sig_logits))
+
+        return results
+
     @staticmethod
     def sigmoid(x):
         z = np.exp(-x)
         sig = 1 / (1 + z)
-
         return sig
-
-    @staticmethod
-    def logits_to_labels(arr, tresh=0.5): ...
-        # TODO: create a logits to label function
 
 
 
