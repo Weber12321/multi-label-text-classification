@@ -3,29 +3,30 @@ from typing import Dict
 
 from celery import Celery
 
-from config.settings import MODEL_CKPT, LogDir
+from settings import LogDir, ServerConfig
 from utils.inference_helper import chunks
 from utils.log_helper import create_logger
 from worker.inference.bert_triton_inference import BertInferenceWorker
 from worker.train.chinese_bert_classification import ChineseBertClassification
 
+celery_config = ServerConfig()
+
 app = Celery(
-    name='bert_celery',
-    broker="redis://redis:6379/0",
-    backend="redis://redis:6379/1"
+    name=celery_config.celery_name,
+    broker=celery_config.celery_broker,
+    backend=celery_config.celery_backend
 )
 
 app.conf.task_routes = {
-    'app.*': {'queue': 'deep_model'},
+    f"{celery_config.celery_name}.*": {'queue': celery_config.celery_queue},
 }
 
-app.conf.update(result_expires=1)
+# app.conf.update(result_expires=celery_config.celery_result_expires)
 app.conf.update(task_track_started=True)
 
 
-@app.task(bind=True, queue='deep_model', name='training')
+@app.task
 def training(
-        self,
         model_name,
         version,
         dataset,
@@ -35,7 +36,7 @@ def training(
         batch_size=32,
         max_len=30,
         is_multi_label=1,
-        ckpt=MODEL_CKPT.get('chinese-bert-wwm')
+        ckpt=celery_config.celery_model_ckpt
 
 ):
     dataset = json.loads(dataset)
@@ -55,33 +56,15 @@ def training(
     )
 
     task_worker.init_model()
-    results: Dict[str, str] = task_worker.run()
-    return results
 
-    # df_train, df_test, label_col = load_dataset(
-    #     TrainingFileName.dataset, TrainingFileName.labels
-    # )
-    #
-    # report, model_size, false_pred = run(
-    #     df_train= df_train,
-    #     df_test= df_test,
-    #     label_col=label_col,
-    #     model_name=model_name,
-    #     version=version,
-    #     learning_rate=learning_rate,
-    #     epochs=epochs,
-    #     batch_size=batch_size,
-    #     max_len=max_len,
-    #     num_labels=len(label_col),
-    #     ckpt=ckpt,
-    #     dsn=dsn
-    # )
-    #
-    # return report, model_size, false_pred
+    # fp_df stand for false prediction records with text, ground_truth and prediction
+    # report stand for output of sklearn classification_report
+    best_val_f1, best_test_f1, val_report, test_report, val_fp_df, test_fp_df = task_worker.run()
+    return best_val_f1, best_test_f1, val_report, test_report, val_fp_df, test_fp_df
 
 
-@app.task(bind=True, queue='deep_model', name='predict')
-def predict(self, model_name, version, max_len, dataset):
+@app.task
+def predict(model_name, version, max_len, dataset):
     logger = create_logger(LogDir.inference)
     data = json.loads(dataset)
 
@@ -92,17 +75,16 @@ def predict(self, model_name, version, max_len, dataset):
             dataset=chunk,
             model_name=model_name,
             model_version=version,
-            url='triton:8000',
-            backend='pytorch',
+            url=celery_config.inference_url,
+            backend=celery_config.inference_backend,
             max_len=max_len,
             chunk_size=len(chunk)
         )
         results = infer_worker.run()
-        # print(results)
         output.extend(results.tolist())
 
+    # output is a nested list contained predicted probabilities with same length of input data,
+    # e.g [[0.983423, 0.234324, 0.132432, 0.235643], [...], ...]
     assert len(output) == len(data)
 
     return json.dumps(output, ensure_ascii=False)
-
-

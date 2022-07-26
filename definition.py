@@ -1,7 +1,7 @@
 import os
 from pathlib import Path, PurePath
 
-ROOT_DIR = PurePath(__file__).parent.parent
+ROOT_DIR = PurePath(__file__).parent
 
 LOGS_DIR = Path(ROOT_DIR / "logs")
 Path(LOGS_DIR).mkdir(exist_ok=True)
@@ -27,5 +27,8 @@ Path(MODEL_PT_DIR).mkdir(exist_ok=True)
 AUDIENCE_BERT_DIR = Path(MODEL_PT_DIR / "audience_bert")
 Path(AUDIENCE_BERT_DIR).mkdir(exist_ok=True)
 
-CONFIG_PBTXT_PATH = Path(ROOT_DIR, "config.pbtxt")
+CONFIG_PBTXT_PATH = Path(ROOT_DIR / "configuration")
+Path(CONFIG_PBTXT_PATH).mkdir(exist_ok=True)
+
+ENV_PATH = Path(ROOT_DIR / '.env')
 

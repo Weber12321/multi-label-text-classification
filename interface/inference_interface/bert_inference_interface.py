@@ -6,8 +6,8 @@ import numpy as np
 import tritonclient.http as httpclient
 from transformers import AutoTokenizer
 
-from config.definition import TOKEN_DIR
-from config.settings import INFERENCE_TYPE
+from definition import TOKEN_DIR
+from settings import INFERENCE_TYPE
 from interface.inference_interface.inference_interface import InferenceInterface
 from utils.exception_helper import BackendNotFoundError, ModelNotFoundError
 

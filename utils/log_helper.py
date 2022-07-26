@@ -3,8 +3,8 @@ from datetime import datetime
 
 from loguru import logger
 
-from config.definition import LOGS_DIR
-from config.settings import LogVar
+from definition import LOGS_DIR
+from settings import LogVar
 
 
 def get_log_name(directory: str, file_name):

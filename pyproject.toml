@@ -17,6 +17,8 @@ torch = [
     {url = "https://download.pytorch.org/whl/cu113/torch-1.11.0%2Bcu113-cp38-cp38-linux_x86_64.whl", markers = "sys_platform == 'linux'"}
 ]
 tritonclient = {extras = ["all"], version = "^2.23.0"}
+pydantic = {extras = ["dotenv"], version = "^1.9.1"}
+SQLAlchemy = "^1.4.39"
 
 [tool.poetry.dev-dependencies]
 

@@ -7,7 +7,7 @@ import numpy as np
 import pandas as pd
 from sklearn.model_selection import train_test_split
 
-from config.definition import DATA_DIR, MODEL_PT_DIR, CONFIG_PBTXT_PATH, TOKEN_DIR
+from definition import DATA_DIR, MODEL_PT_DIR, CONFIG_PBTXT_PATH, TOKEN_DIR
 
 
 def sigmoid_logits_to_one_hot(arr: np.array, thresh=0.5):
@@ -63,14 +63,15 @@ def load_dataset(file_name, label_file_name, test_size=0.2, random_state=42):
     return df_train, df_test, labels
 
 
-def create_model_dir(model_name: str):
+def create_model_dir(model_name: str, num_labels: int):
     AUDIENCE_BERT_DIR = Path(MODEL_PT_DIR / model_name)
     Path(AUDIENCE_BERT_DIR).mkdir(exist_ok=True)
 
     if not os.path.isfile(os.path.join(AUDIENCE_BERT_DIR / "config.pbtxt")):
-
+        if num_labels not in {2, 4, 8}:
+            raise ValueError(f"{num_labels}-classes classification is not supported yet")
         shutil.copyfile(
-            str(CONFIG_PBTXT_PATH),
+            str(os.path.join(CONFIG_PBTXT_PATH / f"{num_labels}" / "config.pbtxt")),
             os.path.join(os.path.join(AUDIENCE_BERT_DIR / "config.pbtxt"))
         )
 

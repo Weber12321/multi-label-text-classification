@@ -7,8 +7,8 @@ from torch.nn import BCEWithLogitsLoss
 from tqdm.auto import tqdm
 from transformers import AutoTokenizer, AutoModelForSequenceClassification, AdamW, get_scheduler
 
-from config.definition import *
-from config.settings import LogDir
+from definition import *
+from settings import LogDir
 from data_set.data_loader import create_data_loader
 from train.evaluate_flow import eval_epoch
 from train.predict_flow import get_classification_report, save_pt, get_model_size

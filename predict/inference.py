@@ -4,7 +4,7 @@ from typing import List
 import tritonclient.grpc as grpcclient
 from transformers import AutoTokenizer
 
-from config.definition import MODEL_DIR
+from definition import MODEL_DIR
 from data_set.data_loader import create_data_loader_pred
 
 

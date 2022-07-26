@@ -1,7 +1,7 @@
 from abc import ABC, abstractmethod
 from typing import Iterable
 
-from config.settings import LogDir
+from settings import LogDir
 from utils.log_helper import create_logger
 
 

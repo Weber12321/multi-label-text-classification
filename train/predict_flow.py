@@ -7,15 +7,16 @@ from utils.train_helper import sigmoid_logits_to_one_hot, one_hot_to_label
 
 
 def get_classification_report(model, test_data_loader, path, device, label_col):
-    y_review_texts, y_pred, y_test, prob = get_prediction(model, test_data_loader, path, device)
+    id_list, y_review_texts, y_pred, y_test, prob = get_prediction(model, test_data_loader, path, device)
     report = classification_report(y_test, y_pred, target_names=label_col, output_dict=True)
-    report = pd.DataFrame(report).transpose()
-    report = report.reset_index().rename(columns={'index': 'label'})
-    false_prediction = [['text', 'label', 'predict']]
+    # report = pd.DataFrame(report).transpose()
+    # report = report.reset_index().rename(columns={'index': 'label'})
+    false_prediction = [['doc_id', 'content', 'ground_truth', 'predict_label']]
     for i in range(len(y_pred)):
         if not (y_pred[i] == y_test[i]).all():
             false_prediction.append(
                 [
+                    id_list[i],
                     y_review_texts[i],
                     one_hot_to_label(y_test[i], label_col),
                     one_hot_to_label(y_pred[i], label_col)
@@ -31,6 +32,7 @@ def get_classification_report(model, test_data_loader, path, device, label_col):
 def get_prediction(model, data_loader, path, device):
     model.load_state_dict(torch.load(path))
     model = model.eval()
+    id_list = []
     review_texts = []
     predictions = []
     # prediction_probability = []
@@ -38,6 +40,7 @@ def get_prediction(model, data_loader, path, device):
 
     with torch.no_grad():
         for d in data_loader:
+            ids = d['ids']
             texts = d['review_text']
             input_ids = d['input_ids'].to(device)
             attention_mask = d["attention_mask"].to(device)
@@ -45,6 +48,8 @@ def get_prediction(model, data_loader, path, device):
             outputs = model(input_ids=input_ids, attention_mask=attention_mask)
             # logits = outputs.logits
             logits = outputs[-1]
+
+            id_list.extend(ids)
             review_texts.extend(texts)
             predictions.extend(logits.sigmoid())
             real_values.extend(targets)
@@ -55,7 +60,7 @@ def get_prediction(model, data_loader, path, device):
         y_pred = sigmoid_logits_to_one_hot(prob)
         # predictions = torch.stack(predictions).cpu().detach()
         # real_values = torch.stack(real_values).cpu().detach()
-    return review_texts, y_pred, y_true, prob
+    return id_list, review_texts, y_pred, y_true, prob
 
 
 # https://discuss.pytorch.org/t/finding-model-size/130275/2
