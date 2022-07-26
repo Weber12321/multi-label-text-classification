@@ -20,7 +20,7 @@ Please refer to `bert_celery_app.py` for more details.
 
 ## Work flow
 
-![](graph/Audience DL-model_service.png)
+![](graph/Audience-DL-model_service.png)
 
 ## Build with
 
