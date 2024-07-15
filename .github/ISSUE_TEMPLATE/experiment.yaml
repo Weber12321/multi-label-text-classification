@@ -1,0 +1,57 @@
+name: 實驗請求
+description: 提交一個實驗或分析請求
+title: "[EXPERIEMENT] {服務/版本}-{標題}"
+labels: ["type: experiement"]
+body:
+- type: checkboxes
+  attributes:
+    label: 無存在相關實驗？(必填)
+    description: 請搜尋看看是否已有類似的現有實驗。
+    options:
+    - label: 我已搜尋過現有的實驗
+      required: true
+- type: textarea
+  attributes:
+    label: Pull Request 分支連結(必填)
+    description: 請提供該請求相關 PR 分支連結
+  validations:
+    required: true
+- type: textarea
+  attributes:
+    label: 實驗動機(必填)
+    description: 簡單描述實驗或分析動機，以及要使用的 baseline 資料與模型資訊
+    render: markdown
+  validations:
+    required: true
+- type: textarea
+  attributes:
+    label: 預期結果(必填)
+    description: 簡單描述實驗或分析預期的結果
+    render: markdown
+  validations:
+    required: true
+- type: input
+  attributes:
+    label: 版本(必填)
+    description: 版本號或目前服務部署於哪一台機器
+  validations:
+    required: true
+- type: textarea
+  attributes:
+    label: 平台環境(必填)
+    description: |
+      例:
+        - **作業系統**: Ubuntu 20.04
+    value: |
+        - 作業系統:
+    render: markdown
+  validations:
+    required: true
+- type: textarea
+  attributes:
+    label: 其他補充(必填)
+    description: |
+      任何實驗所需要的連結、截圖或影片等外部補充文獻等相關訊息，都需要寫在這裡。
+      提示：可以點擊此區域以突出顯示，然後拖入圖片或相關文件。
+  validations:
+    required: true

@@ -1,0 +1,2 @@
+# if creating a new issue, if it is set to `true`, blank issue is allowed, otherwise using template only.
+blank_issues_enabled: false
