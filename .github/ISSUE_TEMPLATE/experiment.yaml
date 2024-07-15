@@ -6,7 +6,7 @@ labels: ["type: experiement"]
 body:
 - type: markdown
   attributes:
-    vale: |
+    value: |
       * 牌卡開立原則說明 *
       - 重複能使用到的通用之產品基礎功能:
         - Ai 核心功能，請開在 systalk-ai-core
