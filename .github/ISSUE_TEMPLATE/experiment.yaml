@@ -4,7 +4,7 @@ description: |
 title: "[EXPERIEMENT] {服務/版本}-{標題}"
 labels: ["type: experiement"]
 body:
-- type: textarea
+- type: markdown
   attributes:
     label: 牌卡開立原則說明
     description: |
